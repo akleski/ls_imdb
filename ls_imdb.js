@@ -1,19 +1,72 @@
 // ==UserScript==
 // @name         IMDb Movie Score and Search Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Adds Metacritic and Rotten Tomatoes scores, and a custom external search link to IMDb movie lists.
 // @author       Gemini
 // @match        https://www.imdb.com/search/title/?title_type=feature&*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
+// @grant        GM_getResourceText
+// @grant        GM_registerMenuCommand
+// @grant        GM_notification
 // @connect      www.metacritic.com
 // @connect      www.rottentomatoes.com
+// @connect      raw.githubusercontent.com
 // @connect      *
+// @updateURL    https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js
+// @downloadURL  https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js
 // ==/UserScript==
 
 (function() {
     'use strict';
+    
+    // Current version
+    const CURRENT_VERSION = '1.1';
+    
+    // Function to check for updates
+    function checkForUpdates() {
+        const updateUrl = 'https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js';
+        
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: updateUrl,
+            onload: function(response) {
+                const versionMatch = response.responseText.match(/@version\s+(\d+\.\d+)/);
+                
+                if (versionMatch && versionMatch[1]) {
+                    const latestVersion = versionMatch[1];
+                    
+                    if (latestVersion > CURRENT_VERSION) {
+                        GM_notification({
+                            title: 'Update Available',
+                            text: `A new version (${latestVersion}) of IMDb Movie Score and Search Enhancer is available. Click to update.`,
+                            onclick: function() {
+                                window.open(updateUrl, '_blank');
+                            }
+                        });
+                    } else {
+                        GM_notification({
+                            title: 'No Updates Available',
+                            text: `You're running the latest version (${CURRENT_VERSION}).`
+                        });
+                    }
+                } else {
+                    console.error('Failed to parse version from update URL');
+                }
+            },
+            onerror: function(error) {
+                console.error('Error checking for updates', error);
+                GM_notification({
+                    title: 'Update Check Failed',
+                    text: 'Failed to check for updates. Please try again later.'
+                });
+            }
+        });
+    }
+    
+    // Register the update check menu command
+    GM_registerMenuCommand('Check for updates', checkForUpdates);
 
     // Add some basic CSS for the new column
     GM_addStyle(`
