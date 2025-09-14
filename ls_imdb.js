@@ -13,8 +13,8 @@
 // @connect      www.rottentomatoes.com
 // @connect      raw.githubusercontent.com
 // @connect      *
-// @updateURL    https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js
-// @downloadURL  https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js
+// @updateURL    https://github.com/akleski/ls_imdb/blob/main/ls_imdb.js
+// @downloadURL  https://github.com/akleski/ls_imdb/blob/main/ls_imdb.js
 // ==/UserScript==
 
 (function() {
@@ -25,7 +25,7 @@
     
     // Function to check for updates
     function checkForUpdates() {
-        const updateUrl = 'https://raw.githubusercontent.com/akleski/ls_imdb/main/ls_imdb.js';
+        const updateUrl = 'https://github.com/akleski/ls_imdb/blob/main/ls_imdb.js';
         
         GM_xmlhttpRequest({
             method: "GET",
