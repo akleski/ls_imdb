@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         IMDb Movie Score and Search Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  Adds Metacritic and Rotten Tomatoes scores, and a custom external search link to IMDb movie lists.
+// @version      1.9
+// @description  Adds Rotten Tomatoes Tomatometer and Audience scores with icons, and custom search links to IMDb movie lists.
 // @author       Gemini
 // @match        https://www.imdb.com/search/title/?title_type=feature&*
 // @grant        GM_xmlhttpRequest
@@ -21,7 +21,7 @@
     'use strict';
     
     // Current version
-    const CURRENT_VERSION = '1.3';
+    const CURRENT_VERSION = '1.9';
     
     // Function to check for updates
     function checkForUpdates() {
@@ -67,22 +67,14 @@
     // Register the update check menu command
     GM_registerMenuCommand('Check for updates', checkForUpdates);
 
-    // Add some basic CSS for the new column
+    // Add CSS for the scores in the metadata section
     GM_addStyle(`
+        /* Styles for external links section */
         .ipc-metadata-list-summary-item .ratings-container {
             min-width: 100px;
             margin-top: 8px;
             padding: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .ipc-metadata-list-summary-item .ratings-container .score {
-            display: block;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 4px;
-        }
-        .ipc-metadata-list-summary-item .ratings-container .rotten-tomatoes-score {
-            color: #993333;
         }
         .ipc-metadata-list-summary-item .ratings-container .external-link {
             font-size: 0.8em;
@@ -94,6 +86,26 @@
         .ipc-metadata-list-summary-item .ratings-container .external-link:hover {
             text-decoration: underline;
         }
+        
+        /* Styles for the inline scores in metadata */
+        .sc-15ac7568-7.dli-title-metadata-item.rt-score,
+        .sc-15ac7568-7.dli-title-metadata-item.audience-score {
+            display: inline-flex;
+            align-items: center;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+        .rt-score {
+            color: #fa320a;
+        }
+        .audience-score {
+            color: #18479c;
+        }
+        .score-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 2px;
+        }
     `);
 
     // Define the external site you want to search.
@@ -102,10 +114,236 @@
 
     // Metacritic score is now provided natively by IMDb
 
-    // Helper function to get Rotten Tomatoes score
-    function getRottenTomatoesScore(title) {
-        const url = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(title)}`;
-        console.log(`Fetching Rotten Tomatoes score for "${title}" from ${url}`);
+    // Helper function to process Rotten Tomatoes detail page results
+    function getRottenTomatoesDetailPage(title, releaseYear, movieResults, parser) {
+        // Default result object with placeholders
+        const result = {
+            tomatoScore: 'N/A',
+            audienceScore: 'N/A',
+            tomatoImage: null,
+            audienceImage: null,
+            movieUrl: null
+        };
+        
+        // Find the best matching movie (prioritize exact title match with year)
+        let bestMatch = null;
+        
+        for (const movie of movieResults) {
+            // Get movie title and year
+            const titleElement = movie.querySelector('[slot="title"]') || 
+                               movie.querySelector('.title') ||
+                               movie.querySelector('a');
+                               
+            const yearElement = movie.querySelector('[data-qa="info-year"]') ||
+                              movie.querySelector('.year');
+            
+            if (!titleElement) continue;
+            
+            const movieTitle = titleElement.textContent.trim();
+            const movieYear = yearElement ? yearElement.textContent.trim().replace(/[()]/g, '') : '';
+            
+            console.log(`Found movie in results: "${movieTitle}" (${movieYear})`);
+            
+            // Check for exact match with year
+            if (releaseYear && movieTitle.toLowerCase().includes(title.toLowerCase()) && 
+                movieYear.includes(releaseYear)) {
+                bestMatch = movie;
+                break;
+            } 
+            // Check for exact match without year
+            else if (movieTitle.toLowerCase() === title.toLowerCase()) {
+                bestMatch = movie;
+                break;
+            }
+            // Keep first as fallback
+            else if (!bestMatch) {
+                bestMatch = movie;
+            }
+        }
+        
+        if (!bestMatch) {
+            bestMatch = movieResults[0]; // Use the first result as fallback
+        }
+        
+        console.log('Best match selected:', bestMatch.outerHTML.substring(0, 200) + '...');
+        
+        // Get the direct URL to the movie page
+        let movieUrl = null;
+        
+            // Try to find the URL - it might be in the title slot or another link
+            const titleSlot = bestMatch.querySelector('[slot="title"]');
+            if (titleSlot && titleSlot.tagName === 'A') {
+                const href = titleSlot.getAttribute('href');
+                console.log(`Found title slot with href: ${href}`);
+                if (href) {
+                    if (href.startsWith('/m/')) {
+                        movieUrl = 'https://www.rottentomatoes.com' + href;
+                        console.log(`Found relative movie URL in title slot: ${movieUrl}`);
+                    } else if (href.includes('rottentomatoes.com/m/')) {
+                        // It's a full URL, not just a path
+                        movieUrl = href;
+                        console.log(`Found full movie URL in title slot: ${movieUrl}`);
+                    }
+                }
+            }        if (!movieUrl) {
+            // Look through all links and find one that looks like a movie URL
+            const allLinks = bestMatch.querySelectorAll('a');
+            for (const link of allLinks) {
+                const href = link.getAttribute('href');
+                if (href) {
+                    if (href.startsWith('/m/')) {
+                        movieUrl = 'https://www.rottentomatoes.com' + href;
+                        break;
+                    } else if (href.includes('rottentomatoes.com/m/')) {
+                        // It's a full URL, not just a path
+                        movieUrl = href;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (movieUrl) {
+            result.movieUrl = movieUrl;
+            console.log(`Found movie URL: ${result.movieUrl}`);
+            
+            // Extract the Tomatometer score from the search result
+            const criticScoreElement = bestMatch.querySelector('rt-text.critics-score') || 
+                                      bestMatch.querySelector('[data-qa="critic-score"]');
+            
+            if (criticScoreElement) {
+                const text = criticScoreElement.textContent.trim();
+                const match = text.match(/(\d+)%/);
+                if (match) {
+                    result.tomatoScore = match[1] + '%';
+                    console.log(`Found Tomatometer score: ${result.tomatoScore}`);
+                }
+                
+                // Try to determine icon
+                const iconElement = bestMatch.querySelector('score-icon-critics');
+                if (iconElement) {
+                    const sentiment = iconElement.getAttribute('sentiment') || '';
+                    const certified = iconElement.hasAttribute('certified');
+                    
+                    if (parseInt(result.tomatoScore) >= 60 || sentiment === 'POSITIVE') {
+                        result.tomatoImage = certified ? 
+                            'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh-notext.56a89734a59.svg' : 
+                            'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
+                    } else {
+                        result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
+                    }
+                }
+            }
+            
+            // Now get the audience score from the detail page
+            return new Promise((resolve) => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: result.movieUrl,
+                    onload: function(detailResponse) {
+                        const detailDoc = parser.parseFromString(detailResponse.responseText, "text/html");
+                        
+                        // Process detail page to get audience score (same as existing code)
+                        const scoreBoard = detailDoc.querySelector('score-board');
+                        if (scoreBoard) {
+                            console.log("Found score-board element");
+                            
+                            // If we didn't find tomatometer in search, get it from detail page
+                            if (result.tomatoScore === 'N/A' && scoreBoard.hasAttribute('tomatometerscore')) {
+                                result.tomatoScore = scoreBoard.getAttribute('tomatometerscore') + '%';
+                                console.log(`Found Tomatometer score in detail page: ${result.tomatoScore}`);
+                                
+                                // Set appropriate icon
+                                const tomatometerState = scoreBoard.getAttribute('tomatometerstate') || '';
+                                if (tomatometerState.includes('certified')) {
+                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh-notext.56a89734a59.svg';
+                                } else if (tomatometerState.includes('fresh')) {
+                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
+                                } else if (tomatometerState.includes('rotten')) {
+                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
+                                }
+                            }
+                            
+                            // Get audience score
+                            if (scoreBoard.hasAttribute('audiencescore')) {
+                                result.audienceScore = scoreBoard.getAttribute('audiencescore') + '%';
+                                console.log(`Found Audience score: ${result.audienceScore}`);
+                                
+                                // Set appropriate icon
+                                const audienceState = scoreBoard.getAttribute('audiencestate') || '';
+                                if (audienceState.includes('upright')) {
+                                    result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                } else if (audienceState.includes('spilled')) {
+                                    result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                }
+                            }
+                        }
+                        
+                        // Try to find audience score from other elements if not found yet
+                        if (result.audienceScore === 'N/A') {
+                            // Rest of audience score extraction logic (same as existing code)
+                            const audienceTextElement = detailDoc.querySelector('rt-text.audience-score') ||
+                                                     detailDoc.querySelector('[data-qa="audience-score"]');
+                            
+                            if (audienceTextElement) {
+                                const text = audienceTextElement.textContent.trim();
+                                const match = text.match(/(\d+)%/);
+                                if (match) {
+                                    result.audienceScore = match[1] + '%';
+                                    console.log(`Found Audience score via text: ${result.audienceScore}`);
+                                    
+                                    // Determine icon based on score value
+                                    if (parseInt(result.audienceScore) >= 60) {
+                                        result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                    } else {
+                                        result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                    }
+                                }
+                            }
+                            
+                            // JSON-LD data check (same as existing code)
+                            const jsonLdElements = detailDoc.querySelectorAll('script[type="application/ld+json"]');
+                            jsonLdElements.forEach(script => {
+                                try {
+                                    const jsonData = JSON.parse(script.textContent);
+                                    
+                                    if (jsonData.aggregateRating && jsonData.aggregateRating.ratingValue && 
+                                        jsonData.aggregateRating.name === "Popcornmeter") {
+                                        result.audienceScore = jsonData.aggregateRating.ratingValue + '%';
+                                        
+                                        // Set icon based on score value
+                                        if (parseInt(result.audienceScore) >= 60) {
+                                            result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                        } else {
+                                            result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                        }
+                                    }
+                                } catch (e) {
+                                    console.error('Error parsing JSON-LD:', e);
+                                }
+                            });
+                        }
+                        
+                        resolve(result);
+                    },
+                    onerror: function(error) {
+                        console.error('Error fetching movie detail page:', error);
+                        resolve(result); // Resolve with what we have so far
+                    }
+                });
+            });
+        } else {
+            console.log("No movie URL found in the alternative format");
+            return Promise.resolve(result);
+        }
+    }
+    
+    // Helper function to get Rotten Tomatoes scores and images
+    function getRottenTomatoesScore(title, releaseYear) {
+        // Include release year in search if available to narrow down results
+        const searchTerm = releaseYear ? `${title} ${releaseYear}` : title;
+        const url = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(searchTerm)}`;
+        console.log(`Fetching Rotten Tomatoes score for "${searchTerm}" from ${url}`);
         
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -115,89 +353,260 @@
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(response.responseText, "text/html");
                     
-                    // First find the movie result
+                    // Find all movie results
                     const movieResults = doc.querySelectorAll('search-page-media-row');
                     console.log(`Found ${movieResults.length} movie results for "${title}"`);
                     
-                    if (movieResults.length > 0) {
-                        // For each movie result, try to find the score
-                        for (const result of movieResults) {
-                            // Find score element within this result
-                            const scoreElements = [
-                                result.querySelector('score-icon-critic'),
-                                result.querySelector('[data-qa="tomatometer"]'),
-                                result.querySelector('.percentage'),
-                                result.querySelector('[data-qa="score-marker"]')
-                            ].filter(Boolean);
+                    // If no results found using the primary selector, try alternative selectors
+                    if (movieResults.length === 0) {
+                        console.log('Trying alternative selectors for search results');
+                        
+                        // Try li.row elements (as seen in your HTML snippet)
+                        const rowResults = doc.querySelectorAll('li.row[data-qa="data-row-element"]');
+                        if (rowResults.length > 0) {
+                            console.log(`Found ${rowResults.length} row results using li.row selector`);
                             
-                            // Check if any score elements were found
-                            if (scoreElements.length > 0) {
-                                for (const scoreEl of scoreElements) {
-                                    // Check for attributes that might contain the score
-                                    if (scoreEl.hasAttribute('percentage')) {
-                                        const score = scoreEl.getAttribute('percentage');
-                                        console.log(`Found RT score via percentage attribute: ${score}%`);
-                                        resolve(score + '%');
-                                        return;
-                                    }
-                                    
-                                    // Check for text content with percentage
-                                    const fullText = scoreEl.textContent.trim();
-                                    const percentMatch = fullText.match(/(\d+)%/);
-                                    if (percentMatch) {
-                                        console.log(`Found RT score via text content: ${percentMatch[1]}%`);
-                                        resolve(percentMatch[1] + '%');
-                                        return;
-                                    }
+                            // Use these results instead
+                            return getRottenTomatoesDetailPage(title, releaseYear, rowResults, parser);
+                        }
+                    }
+                    
+                    // Default result object with placeholders
+                    const result = {
+                        tomatoScore: 'N/A',
+                        audienceScore: 'N/A',
+                        tomatoImage: null,
+                        audienceImage: null,
+                        movieUrl: null
+                    };
+                    
+                    // No results found
+                    if (movieResults.length === 0) {
+                        console.log(`No movie results found for "${title}"`);
+                        resolve(result);
+                        return;
+                    }
+                    
+                    // Find the best matching movie (prioritize exact title match with year)
+                    let bestMatch = null;
+                    
+                    for (const movie of movieResults) {
+                        // Check if it's a movie (not TV show)
+                        const mediaType = movie.querySelector('[slot="media-type"]');
+                        if (mediaType && !mediaType.textContent.trim().toLowerCase().includes('movie')) {
+                            continue;
+                        }
+                        
+                        // Get movie title
+                        const titleElement = movie.querySelector('[data-qa="media-row-title"]') || 
+                                           movie.querySelector('.media-row__title') ||
+                                           movie.querySelector('a[slot="title"]');
+                        
+                        if (!titleElement) continue;
+                        
+                        const movieTitle = titleElement.textContent.trim();
+                        // Check for exact match with year
+                        if (releaseYear && movieTitle.toLowerCase().includes(`${title.toLowerCase()}`) && 
+                            movieTitle.includes(`(${releaseYear})`)) {
+                            bestMatch = movie;
+                            break;
+                        } 
+                        // Check for exact match without year
+                        else if (movieTitle.toLowerCase() === title.toLowerCase()) {
+                            bestMatch = movie;
+                            break;
+                        }
+                        // Keep first as fallback
+                        else if (!bestMatch) {
+                            bestMatch = movie;
+                        }
+                    }
+                    
+                    if (!bestMatch) {
+                        bestMatch = movieResults[0]; // Use the first result as fallback
+                    }
+                    
+                    // Get the direct URL to the movie page
+                    // Try multiple selector patterns to find the movie URL
+                    let linkElement = bestMatch.querySelector('a[href^="/m/"]');
+                    
+                    // If not found directly, check parent/ancestor elements
+                    if (!linkElement && bestMatch.closest) {
+                        const rowElement = bestMatch.closest('.row') || bestMatch.closest('li.row');
+                        if (rowElement) {
+                            linkElement = rowElement.querySelector('a[href^="/m/"]');
+                        }
+                    }
+                    
+                    // Also try to find the link by looking at slot="title" elements
+                    if (!linkElement) {
+                        const titleSlot = bestMatch.querySelector('[slot="title"]');
+                        if (titleSlot && titleSlot.tagName === 'A') {
+                            const href = titleSlot.getAttribute('href');
+                            if (href) {
+                                if (href.startsWith('/m/')) {
+                                    linkElement = titleSlot;
+                                } else if (href.includes('rottentomatoes.com/m/')) {
+                                    // It's a full URL, not just a path
+                                    result.movieUrl = href;
+                                    console.log(`Found full movie URL in title slot: ${result.movieUrl}`);
+                                    linkElement = null; // Don't need linkElement anymore since we have the full URL
                                 }
                             }
                         }
-                        
-                        // If we get here, we didn't find a score in any of the results
-                        console.log(`No score found in movie results for "${title}"`);
-                        resolve('N/A');
+                    }
+
+                    // If we have a direct movie URL, get scores from the detail page
+                    if (result.movieUrl) {
+                        GM_xmlhttpRequest({
+                            method: "GET",
+                            url: result.movieUrl,
+                            onload: function(detailResponse) {
+                                const detailDoc = parser.parseFromString(detailResponse.responseText, "text/html");
+                                
+                                // Check for score-board element
+                                console.log("Checking for score-board element in detail page...");
+                                const scoreBoard = detailDoc.querySelector('score-board');
+                                if (scoreBoard) {
+                                    // Try to get the audience score from score-board
+                                    if (scoreBoard.hasAttribute('audiencescore')) {
+                                        result.audienceScore = scoreBoard.getAttribute('audiencescore') + '%';
+                                        console.log(`Found Audience score from score-board: ${result.audienceScore}`);
+                                        
+                                        // Set appropriate icon
+                                        const audienceState = scoreBoard.getAttribute('audiencestate') || '';
+                                        if (audienceState.includes('upright')) {
+                                            result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                        } else if (audienceState.includes('spilled')) {
+                                            result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                        }
+                                    }
+                                }
+                                
+                                // Try the JSON-LD data for scores
+                                console.log("Looking for scores in JSON-LD data...");
+                                const jsonLdElements = detailDoc.querySelectorAll('script[type="application/ld+json"]');
+                                console.log(`Found ${jsonLdElements.length} JSON-LD script elements`);
+                                
+                                jsonLdElements.forEach((script, index) => {
+                                    try {
+                                        console.log(`Parsing JSON-LD element ${index + 1}...`);
+                                        const jsonData = JSON.parse(script.textContent);
+                                        
+                                        // Look for Tomatometer score in JSON-LD
+                                        if (result.tomatoScore === 'N/A' && jsonData.aggregateRating) {
+                                            console.log("Found aggregateRating in JSON-LD:", JSON.stringify(jsonData.aggregateRating));
+                                            if (jsonData.aggregateRating.name === "Tomatometer" && jsonData.aggregateRating.ratingValue) {
+                                                result.tomatoScore = jsonData.aggregateRating.ratingValue + '%';
+                                                console.log(`Found Tomatometer score in JSON-LD: ${result.tomatoScore}`);
+                                                
+                                                // Set icon based on score value
+                                                if (parseInt(result.tomatoScore) >= 60) {
+                                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
+                                                } else {
+                                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
+                                                }
+                                            }
+                                        }
+                                        
+                                        // Look for audience score in JSON-LD
+                                        if (result.audienceScore === 'N/A' && jsonData.aggregateRating && 
+                                            jsonData.aggregateRating.ratingValue && 
+                                            jsonData.aggregateRating.name === "Popcornmeter") {
+                                            result.audienceScore = jsonData.aggregateRating.ratingValue + '%';
+                                            console.log(`Found Audience score in JSON-LD: ${result.audienceScore}`);
+                                            
+                                            // Set icon based on score value
+                                            if (parseInt(result.audienceScore) >= 60) {
+                                                result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                            } else {
+                                                result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                            }
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing JSON-LD:', e);
+                                    }
+                                });
+                                
+                                // Final attempt to find scores by scanning all elements
+                                if (result.tomatoScore === 'N/A' || result.audienceScore === 'N/A') {
+                                    console.log("Making a last attempt to find scores from other elements...");
+                                    
+                                    // Scan all elements for score data
+                                    const allElements = detailDoc.querySelectorAll('*');
+                                    console.log(`Scanning through ${allElements.length} elements for score data...`);
+                                    
+                                    for (const element of allElements) {
+                                        const text = element.textContent?.trim();
+                                        if (!text) continue;
+                                        
+                                        // Check for text that looks like "Tomatometer" near a percentage
+                                        if (result.tomatoScore === 'N/A' && 
+                                            (text.includes('Tomatometer') || text.includes('Critics') || text.includes('critic')) && 
+                                            text.match(/\d+%/)) {
+                                            const match = text.match(/(\d+)%/);
+                                            if (match) {
+                                                result.tomatoScore = match[1] + '%';
+                                                console.log(`Found Tomatometer score from general element scan: ${result.tomatoScore} in element:`, element.outerHTML.substring(0, 100));
+                                                
+                                                // Set icon based on score value
+                                                if (parseInt(result.tomatoScore) >= 60) {
+                                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
+                                                } else {
+                                                    result.tomatoImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
+                                                }
+                                            }
+                                        }
+                                        
+                                        // Check for text that looks like "Audience" near a percentage
+                                        if (result.audienceScore === 'N/A' && 
+                                            (text.includes('Audience') || text.includes('audience')) && 
+                                            text.match(/\d+%/)) {
+                                            const match = text.match(/(\d+)%/);
+                                            if (match) {
+                                                result.audienceScore = match[1] + '%';
+                                                console.log(`Found Audience score from general element scan: ${result.audienceScore} in element:`, element.outerHTML.substring(0, 100));
+                                                
+                                                // Set icon based on score value
+                                                if (parseInt(result.audienceScore) >= 60) {
+                                                    result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-fresh.6c24d79faaf.svg';
+                                                } else {
+                                                    result.audienceImage = 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/audience/aud_score-rotten.f419e4046b7.svg';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                console.log("Final results:", {
+                                    tomatoScore: result.tomatoScore,
+                                    audienceScore: result.audienceScore,
+                                    movieUrl: result.movieUrl
+                                });
+                                
+                                // Resolve with the complete result
+                                resolve(result);
+                            },
+                            onerror: function(error) {
+                                console.error('Error fetching movie detail page:', error);
+                                resolve(result); // Resolve with what we have so far
+                            }
+                        });
                     } else {
-                        // Try alternate selectors on the whole page in case the structure has changed
-                        const altSelectors = [
-                            '.tomatometer-container .percentage',
-                            '.scores-container [data-qa="tomatometer"]',
-                            'score-board',
-                            '.critic-score',
-                            '.tomatometer-fresh',
-                            '.tomatometer-rotten'
-                        ];
-                        
-                        for (const selector of altSelectors) {
-                            const elements = doc.querySelectorAll(selector);
-                            if (elements.length > 0) {
-                                for (const el of elements) {
-                                    // Check for percentage attribute
-                                    if (el.hasAttribute && el.hasAttribute('percentage')) {
-                                        const score = el.getAttribute('percentage');
-                                        console.log(`Found RT score via alt selector: ${score}%`);
-                                        resolve(score + '%');
-                                        return;
-                                    }
-                                    
-                                    // Check for text content
-                                    const text = el.textContent.trim();
-                                    const match = text.match(/(\d+)%/);
-                                    if (match) {
-                                        console.log(`Found RT score via alt text: ${match[1]}%`);
-                                        resolve(match[1] + '%');
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        console.log(`No RT score found for "${title}"`);
-                        resolve('N/A');
+                        // No movie URL found, resolve with default values
+                        console.log("No movie URL found, resolving with default values");
+                        resolve(result);
                     }
                 },
                 onerror: function(error) {
-                    console.error('Error fetching Rotten Tomatoes score for', title, error);
-                    resolve('N/A');
+                    console.error('Error fetching Rotten Tomatoes search results:', error);
+                    resolve({
+                        tomatoScore: 'N/A',
+                        audienceScore: 'N/A',
+                        tomatoImage: null,
+                        audienceImage: null,
+                        movieUrl: null
+                    });
                 }
             });
         });
@@ -238,38 +647,96 @@
             }
             
             const imdbId = imdbIdMatch[1];
-            const title = titleElement.textContent.trim();
+            let title = titleElement.textContent.trim();
+            // Remove list numbering (e.g., "1. ", "2. ", etc.) from the beginning of titles
+            title = title.replace(/^\d+\.\s+/, '');
+            
+            // Extract release year from the movie item
+            let releaseYear = '';
+            const yearElements = movieElement.querySelectorAll('.dli-title-metadata-item');
+            if (yearElements && yearElements.length > 0) {
+                // IMDB usually puts the year as the first metadata item
+                const yearText = yearElements[0].textContent.trim();
+                const yearMatch = yearText.match(/(\d{4})/);
+                if (yearMatch) {
+                    releaseYear = yearMatch[1];
+                    console.log(`Found release year: ${releaseYear} for ${title}`);
+                }
+            }
 
-            console.log(`Processing movie: ${title} (${imdbId})`);
+            console.log(`Processing movie: ${title} (${imdbId}) [${releaseYear}]`);
+            
+            // Container for external links (to be placed after metadata)
+            const linksContainer = document.createElement('div');
+            linksContainer.className = 'ratings-container';
 
-            const scoresContainer = document.createElement('div');
-            scoresContainer.className = 'ratings-container';
+            // Fetch Rotten Tomatoes scores and images
+            const rtScores = await getRottenTomatoesScore(title, releaseYear);
+            
+            // Find the metadata section (dli-title-metadata) where we'll add our inline scores
+            const metadataDiv = movieElement.querySelector('.dli-title-metadata');
+            
+            if (metadataDiv) {
+                // Add the Tomatometer score with icon (inline)
+                const tomatoMetadataItem = document.createElement('span');
+                tomatoMetadataItem.className = 'sc-15ac7568-7 cCsint dli-title-metadata-item rt-score';
+                
+                if (rtScores.tomatoImage) {
+                    const tomatoIcon = document.createElement('img');
+                    tomatoIcon.className = 'score-icon';
+                    tomatoIcon.src = rtScores.tomatoImage;
+                    tomatoIcon.alt = 'RT';
+                    tomatoMetadataItem.appendChild(tomatoIcon);
+                }
+                
+                const tomatoScoreText = document.createTextNode(rtScores.tomatoScore);
+                tomatoMetadataItem.appendChild(tomatoScoreText);
+                
+                // Add the Audience score with icon (inline)
+                const audienceMetadataItem = document.createElement('span');
+                audienceMetadataItem.className = 'sc-15ac7568-7 cCsint dli-title-metadata-item audience-score';
+                
+                if (rtScores.audienceImage) {
+                    const audienceIcon = document.createElement('img');
+                    audienceIcon.className = 'score-icon';
+                    audienceIcon.src = rtScores.audienceImage;
+                    audienceIcon.alt = 'Audience';
+                    audienceMetadataItem.appendChild(audienceIcon);
+                }
+                
+                const audienceScoreText = document.createTextNode(rtScores.audienceScore);
+                audienceMetadataItem.appendChild(audienceScoreText);
+                
+                // Add the new score elements to the metadata section
+                metadataDiv.appendChild(tomatoMetadataItem);
+                metadataDiv.appendChild(audienceMetadataItem);
+            }
 
-            // Only fetch Rotten Tomatoes score since IMDb already shows Metacritic
-            const rottenTomatoesScore = await getRottenTomatoesScore(title);
-
-            // Add the Rotten Tomatoes score
-            const rottenTomatoesSpan = document.createElement('span');
-            rottenTomatoesSpan.className = 'score rotten-tomatoes-score';
-            rottenTomatoesSpan.textContent = `Rotten Tomatoes: ${rottenTomatoesScore}`;
-            scoresContainer.appendChild(rottenTomatoesSpan);
-
-            // Add the external search link
+            // Add the external search link to the separate container
             const externalLink = document.createElement('a');
             externalLink.className = 'external-link';
             externalLink.href = EXTERNAL_SEARCH_URL.replace('__IMDB_ID__', imdbId);
             externalLink.textContent = `Search on External Site`;
             externalLink.target = '_blank'; // Open in a new tab
-            scoresContainer.appendChild(externalLink);
+            linksContainer.appendChild(externalLink);
+            
+            // Add direct link to Rotten Tomatoes page if we found one
+            if (rtScores.movieUrl) {
+                const rtLink = document.createElement('a');
+                rtLink.className = 'external-link';
+                rtLink.href = rtScores.movieUrl;
+                rtLink.textContent = `View on Rotten Tomatoes`;
+                rtLink.target = '_blank';
+                linksContainer.appendChild(rtLink);
+            }
 
-            // Add the container to the movie element in an appropriate location
-            // Find the metadata section where we should append our ratings
+            // Add the links container below the movie element
             const metadataSection = movieElement.querySelector('.ipc-metadata-list-summary-item__tc');
             if (metadataSection) {
-                metadataSection.appendChild(scoresContainer);
+                metadataSection.appendChild(linksContainer);
             } else {
                 // Fallback to appending to the movie element itself
-                movieElement.appendChild(scoresContainer);
+                movieElement.appendChild(linksContainer);
             }
         }
     }
