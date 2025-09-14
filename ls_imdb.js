@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         IMDb Movie Score and Search Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      1.9
-// @description  Adds Rotten Tomatoes Tomatometer and Audience scores with icons, and custom search links to IMDb movie lists.
+// @version      2.0
+// @description  Adds Rotten Tomatoes Tomatometer and Audience scores with icons, magnet links for best quality torrents, and custom search links to IMDb movie lists.
 // @author       Gemini
 // @match        https://www.imdb.com/search/title/?title_type=feature&*
 // @grant        GM_xmlhttpRequest
@@ -11,6 +11,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_notification
 // @connect      www.rottentomatoes.com
+// @connect      thepiratebay.org
 // @connect      raw.githubusercontent.com
 // @connect      *
 // @updateURL    https://github.com/akleski/ls_imdb/blob/main/ls_imdb.js
@@ -21,7 +22,7 @@
     'use strict';
     
     // Current version
-    const CURRENT_VERSION = '1.9';
+    const CURRENT_VERSION = '2.0';
     
     // Function to check for updates
     function checkForUpdates() {
@@ -106,11 +107,148 @@
             height: 16px;
             margin-right: 2px;
         }
+        
+        /* Styles for magnet links */
+        .magnet-link {
+            font-size: 0.8em;
+            margin-top: 5px;
+            display: block;
+            color: #05b705;
+            text-decoration: none;
+            background: url('data:image/gif;base64,R0lGODlhEAAQAIIHAP8A/4CAgMDAwP//AICAAMDAgP///wAAACH5BAEAAAcALAAAAAAQABAAAANKeLrcazBKSMu9GKTcHgxeKIiZOH2gJZKkgLpMsJSySHOPXDxv0LHXgrEB+5gIDACAAqLDCRUQHInogFAgWq3YrdE6dsLuTCZTJAAAOw==') no-repeat left center;
+            padding-left: 20px;
+        }
+        .magnet-link:hover {
+            text-decoration: underline;
+        }
     `);
 
     // Define the external site you want to search.
     // The `__IMDB_ID__` placeholder will be replaced with the movie's ID (e.g., tt1234567).
     const EXTERNAL_SEARCH_URL = 'https://thepiratebay.org/search.php?q=__IMDB_ID__';
+    
+    // Function to fetch and parse The Pirate Bay search results
+    function getPirateBayMagnets(imdbId) {
+        const url = `https://thepiratebay.org/search.php?q=${imdbId}`;
+        console.log(`Fetching magnet links for ${imdbId} from ${url}`);
+        
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: function(response) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(response.responseText, "text/html");
+                    
+                    // Find all torrent entries
+                    const torrentEntries = doc.querySelectorAll('li.list-entry');
+                    console.log(`Found ${torrentEntries.length} torrent entries for ${imdbId}`);
+                    
+                    if (torrentEntries.length === 0) {
+                        console.log(`No torrents found for ${imdbId}`);
+                        resolve({
+                            best1080p: null,
+                            best720p: null
+                        });
+                        return;
+                    }
+                    
+                    // Parse the torrents and store information
+                    const torrents = [];
+                    
+                    for (const entry of torrentEntries) {
+                        try {
+                            // Extract title
+                            const titleElement = entry.querySelector('.item-title a');
+                            if (!titleElement) continue;
+                            const title = titleElement.textContent.trim();
+                            
+                            // Extract magnet link
+                            const magnetElement = entry.querySelector('.item-icons a');
+                            if (!magnetElement) continue;
+                            const magnetLink = magnetElement.getAttribute('href');
+                            
+                            // Extract seeds and leechers
+                            const seedsElement = entry.querySelector('.item-seed');
+                            const leechElement = entry.querySelector('.item-leech');
+                            
+                            if (!seedsElement || !leechElement) continue;
+                            
+                            const seeds = parseInt(seedsElement.textContent.trim(), 10);
+                            const leechers = parseInt(leechElement.textContent.trim(), 10);
+                            
+                            // Calculate seed:leech ratio (avoid division by zero)
+                            const ratio = leechers > 0 ? seeds / leechers : seeds;
+                            
+                            // Determine resolution
+                            const is1080p = title.includes('1080p') || title.includes('1080P');
+                            const is720p = title.includes('720p') || title.includes('720P');
+                            
+                            // Skip CAM/TS versions unless that's all that's available
+                            const isCam = entry.querySelector('.item-type a:last-child').textContent.includes('CAM/TS');
+                            
+                            torrents.push({
+                                title,
+                                magnetLink,
+                                seeds,
+                                leechers,
+                                ratio,
+                                is1080p,
+                                is720p,
+                                isCam
+                            });
+                        } catch (error) {
+                            console.error('Error parsing torrent entry:', error);
+                        }
+                    }
+                    
+                    console.log(`Successfully parsed ${torrents.length} torrents`);
+                    
+                    // First try to find non-CAM versions
+                    let best1080p = findBestTorrent(torrents.filter(t => t.is1080p && !t.isCam));
+                    let best720p = findBestTorrent(torrents.filter(t => t.is720p && !t.isCam));
+                    
+                    // If no non-CAM versions found, include CAM versions
+                    if (!best1080p) {
+                        best1080p = findBestTorrent(torrents.filter(t => t.is1080p));
+                    }
+                    
+                    if (!best720p) {
+                        best720p = findBestTorrent(torrents.filter(t => t.is720p));
+                    }
+                    
+                    resolve({
+                        best1080p,
+                        best720p
+                    });
+                },
+                onerror: function(error) {
+                    console.error('Error fetching The Pirate Bay search results:', error);
+                    resolve({
+                        best1080p: null,
+                        best720p: null
+                    });
+                }
+            });
+        });
+    }
+    
+    // Helper function to find the torrent with best seed:leech ratio
+    function findBestTorrent(torrents) {
+        if (torrents.length === 0) {
+            return null;
+        }
+        
+        // Sort by ratio (descending) and then by seeds (descending)
+        torrents.sort((a, b) => {
+            if (a.ratio !== b.ratio) {
+                return b.ratio - a.ratio;
+            }
+            return b.seeds - a.seeds;
+        });
+        
+        return torrents[0];
+    }
 
     // Metacritic score is now provided natively by IMDb
 
@@ -712,6 +850,28 @@
                 metadataDiv.appendChild(audienceMetadataItem);
             }
 
+            // Fetch magnet links from The Pirate Bay
+            const magnetLinks = await getPirateBayMagnets(imdbId);
+            
+            // Add magnet links if found
+            if (magnetLinks.best1080p) {
+                const magnet1080p = document.createElement('a');
+                magnet1080p.className = 'magnet-link';
+                magnet1080p.href = magnetLinks.best1080p.magnetLink;
+                magnet1080p.textContent = `Best 1080p (Seeds: ${magnetLinks.best1080p.seeds})`;
+                magnet1080p.title = magnetLinks.best1080p.title;
+                linksContainer.appendChild(magnet1080p);
+            }
+            
+            if (magnetLinks.best720p) {
+                const magnet720p = document.createElement('a');
+                magnet720p.className = 'magnet-link';
+                magnet720p.href = magnetLinks.best720p.magnetLink;
+                magnet720p.textContent = `Best 720p (Seeds: ${magnetLinks.best720p.seeds})`;
+                magnet720p.title = magnetLinks.best720p.title;
+                linksContainer.appendChild(magnet720p);
+            }
+            
             // Add the external search link to the separate container
             const externalLink = document.createElement('a');
             externalLink.className = 'external-link';
