@@ -1,0 +1,1179 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[9392],{26204:function(e,t,a){a.d(t,{N:function(){return h},t:function(){return g}});var r=a(52322),n=a(88169),i=a(86704),s=a(72779),o=a.n(s);a(2784);var d=a(19596),l=a(25915),c=a(6221),u=a(96966);let f="li-compact",g="li-info-icon",h=e=>{let{index:t,listItem:a,showItemNumbersInConstText:i,subComponent:s,listItemClassnames:d,isCompact:h,selectorPrefix:C,posterHref:y,titleTextHref:x,episodeHref:v}=e;return a.titleId&&a.titleText?(0,r.jsx)(n.MetaDataListSummaryItem,{children:(0,r.jsxs)(p,{className:o()(d?.PARENT,{[f]:h}),children:[(0,r.jsxs)(m,{children:[(0,r.jsx)(l.Z,{className:d?.POSTER_CONTAINER,listItem:a,index:t,posterHref:y}),(0,r.jsx)(c.ZP,{index:t,className:d?.CHILDREN,listItem:a,selectorPrefix:C||"li",showItemNumbersInConstText:i,bottomElement:h?void 0:a.titleMetadataSubElement,titleTextHref:x,episodeHref:v}),(0,r.jsx)(_,{className:d?.POST_ELEMENT,children:(0,r.jsx)(u.n,{className:g,listItem:a})})]}),s]})}):null},m=d.ZP.div.withConfig({componentId:"sc-ec40e84d-0"})(["align-items:center;display:flex;flex-direction:row;width:100%;"]),p=d.ZP.div.withConfig({componentId:"sc-ec40e84d-1"})(["display:flex;flex-direction:column;padding:"," 0;.watch-options-link{width:max-content;}&.","{padding:0;}"],i.spacing.xs,f),_=d.ZP.div.withConfig({componentId:"sc-ec40e84d-2"})(["align-items:center;display:flex;height:100%;width:fit-content;.","{height:fit-content;}"],g)},32908:function(e,t,a){var r=a(52322);a(2784);var n=a(19596),i=a(88169),s=a(86704);let o=(0,n.ZP)(i.MetaDataList).withConfig({componentId:"sc-2b8fdbce-0"})(["margin-bottom:",";","{",";border:1px solid ",";padding:",";}","{border-bottom:1px solid ",";border-top:1px solid ",";}"],s.spacing.s,s.mediaQueries.breakpoints.above.s,(0,s.setPropertyToShapeVar)("border-radius","ipt-cornerRadius"),(0,s.getColorVar)("ipt-base-border-color"),s.spacing.s,s.mediaQueries.breakpoints.below.m,(0,s.getColorVar)("ipt-base-border-color"),(0,s.getColorVar)("ipt-base-border-color"));t.Z=e=>{let{children:t,...a}=e;return(0,r.jsx)(o,{dividers:"between",...a,children:t})}},96966:function(e,t,a){a.d(t,{n:function(){return _}});var r=a(52322),n=a(14973),i=a(30382),s=a.n(i),o=a(2784),d=a(53665),l=a(88169),c=a(4363),u=a(11438),f=a(63370),g=a(14438),h=a(37179),m=a(88213),p=a(86054);function _(e){let{className:t,listItem:a,renderButton:i,titleHasWatchOption:s=!1}=e,_=(0,d.Z)(),x=(0,f.K)(a)??"",v=_.formatMessage({id:"chart_info_button_aria_label",defaultMessage:"See more information about {target}"},{target:x}),b=(0,g.EO)(),[T,I]=o.useState(!1),$=function(e,t){let[a]=(0,c.E)({query:y,variables:{id:e},context:{serverSideCacheable:!0,personalized:!1},pause:t});return(0,o.useMemo)(()=>a.data?.title?(0,p.S9)(a.data.title):void 0,[a.data])}(a.titleId,!T||C(a)),S=()=>{I(!0),s?b({pageAction:`watcho-open-${a.titleId}`,hitType:n.HitType.POP_UP,refMarkerSuffix:u.Cd.LIST_ITEM}):b({pageAction:h.QJ.TITLE_PROMPT_OPEN,hitType:n.HitType.POP_UP,refMarkerSuffix:u.Cd.LIST_ITEM})},M=(0,p.A$)({...a,...$});return(0,r.jsxs)(r.Fragment,{children:[i?i(S):(0,r.jsx)(l.IconButton,{"data-testid":"title-summary-prompt-button-info-icon",className:t,label:v,name:"info",onColor:"accent2",onSelect:S}),(0,r.jsx)(m.ZP,{isOpen:T,onClose:()=>{I(!1)},title:M})]})}let C=e=>!!(e.certificate&&e.releaseYear&&e.runtime&&e.genres&&e.genres.length>0),y=s()`
+    query TitleSummaryPromptMetadata($id: ID!) {
+        title(id: $id) {
+            certificate {
+                rating
+            }
+            releaseYear {
+                year
+                endYear
+            }
+            runtime {
+                seconds
+            }
+            titleGenres {
+                genres(limit: 3) {
+                    genre {
+                        text
+                    }
+                }
+            }
+        }
+    }
+`},79984:function(e,t,a){a.d(t,{Ll:function(){return p},Lr:function(){return c},M_:function(){return h},N1:function(){return g},_B:function(){return i},e:function(){return x},et:function(){return m},lD:function(){return v},rG:function(){return b},vU:function(){return T},xn:function(){return l}});var r=a(30382),n=a.n(r);let i={id:"common_ariaLabel_closePrompt",defaultMessage:"Close Prompt"},s=n()`
+    fragment EpisodeBottomSheetTitleMetadata on Title {
+        id
+        releaseYear {
+            year
+        }
+        titleText {
+            text
+        }
+        originalTitleText {
+            text
+        }
+        titleType {
+            canHaveEpisodes
+        }
+        series {
+            displayableEpisodeNumber {
+                displayableSeason {
+                    text
+                }
+                episodeNumber {
+                    text
+                }
+            }
+        }
+    }
+`,o=n()`
+    fragment CastEpisodeBottomSheetNav on EpisodeCastConnection {
+        displayableYears(first: 100) {
+            total
+            edges {
+                node {
+                    year
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+        displayableSeasons(first: 100) {
+            total
+            edges {
+                node {
+                    season
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+    }
+`,d=n()`
+    fragment CrewEpisodeBottomSheetNav on EpisodeCrewConnection {
+        displayableYears(first: 100) {
+            total
+            edges {
+                node {
+                    year
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+        displayableSeasons(first: 100) {
+            total
+            edges {
+                node {
+                    season
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+    }
+`,l=function(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"";return n()`
+    query EpisodeBottomSheetCast(
+        $titleId: ID!,
+        $nameId: ID!,
+        $after: ID,
+        $episodeCreditsFilter: EpisodeCreditsFilter
+    ) {
+        name(id: $nameId) {
+            credits(
+                first: 1
+                filter: { 
+                    titles: [$titleId],
+                    categories: ["${e}"],
+                    projectStatus: ["${t}"]
+                }
+            ) {
+                edges {
+                    node {
+                        ... on Cast {
+                            characters {
+                                name
+                            }
+                            episodeCredits(
+                                first: 50, 
+                                after: $after,
+                                filter: $episodeCreditsFilter
+                                sort: {by: RELEASE_DATE order: ASC}
+                            ) {
+                                pageInfo {
+                                    endCursor
+                                    hasNextPage
+                                }
+                                edges {
+                                    node {
+                                        attributes {
+                                            text
+                                        }
+                                        ... on Cast {
+                                            title {
+                                                ...EpisodeBottomSheetTitleMetadata
+                                            }
+                                            characters {
+                                                name
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            nav: episodeCredits(
+                                first: 0
+                            ) {
+                                ...CastEpisodeBottomSheetNav
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${s}
+    ${o}
+`},c=function(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"";return n()`
+    query EpisodeBottomSheetCrew(
+        $titleId: ID!,
+        $nameId: ID!,
+        $after: ID,
+        $episodeCreditsFilter: EpisodeCreditsFilter
+    ) {
+        name(id: $nameId) {
+            credits(
+                first: 1, 
+                filter: {
+                    titles: [$titleId],
+                    categories: ["${e}"],
+                    projectStatus: ["${t}"]
+                }
+            ) {
+                edges {
+                    node {
+                        ... on Crew {
+                            episodeCredits(
+                                first: 50, 
+                                after: $after,
+                                filter: $episodeCreditsFilter
+                                sort: {by: RELEASE_DATE order: ASC}
+                            ) {
+                                pageInfo {
+                                    endCursor
+                                    hasNextPage
+                                }
+                                edges {
+                                    node {
+                                        attributes {
+                                            text
+                                        }
+                                        ... on Crew {
+                                            jobs {
+                                                id
+                                                text
+                                            }
+                                            title {
+                                                ...EpisodeBottomSheetTitleMetadata
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            nav: episodeCredits(
+                                first: 0
+                            ) {
+                                ...CrewEpisodeBottomSheetNav
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${s}
+    ${d}
+`},u=n()`
+    fragment castDisplayableSeasonAndYear on EpisodeCastConnection {
+        displayableSeasons(first: 1) {
+            total
+            edges {
+                node {
+                    season
+                }
+            }
+        }
+        displayableYears(first: 1) {
+            total
+            edges {
+                node {
+                    year
+                }
+            }
+        }
+    }
+`,f=n()`
+    fragment crewDisplayableSeasonAndYear on EpisodeCrewConnection {
+        displayableSeasons(first: 1) {
+            total
+            edges {
+                node {
+                    season
+                }
+            }
+        }
+        displayableYears(first: 1) {
+            total
+            edges {
+                node {
+                    year
+                }
+            }
+        }
+    }
+`,g=n()`
+    fragment creditDisplayableSeasonAndYear on EpisodeCreditConnection {
+        displayableYears(first: 1) {
+            total
+            edges {
+                node {
+                    year
+                }
+            }
+        }
+        displayableSeasons(first: 1) {
+            total
+            edges {
+                node {
+                    season
+                }
+            }
+        }
+    }
+`,h=n()`
+    query DisplayableSeasonAndYear(
+        $titleId: ID!
+        $nameId: ID!
+        $jobCategoryId: ID!
+    ) {
+        name(id: $nameId) {
+            credits(
+                filter: { titles: [$titleId], categories: [$jobCategoryId] }
+                first: 1
+            ) {
+                edges {
+                    node {
+                        ... on Cast {
+                            episodeCredits(first: 0) {
+                                total
+                                yearRange {
+                                    endYear
+                                    year
+                                }
+                                ...castDisplayableSeasonAndYear
+                            }
+                        }
+                        ... on Crew {
+                            episodeCredits(first: 0) {
+                                total
+                                yearRange {
+                                    endYear
+                                    year
+                                }
+                                ...crewDisplayableSeasonAndYear
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${u}
+    ${f}
+`,m=n()`
+    query NameDisplayableSeasonAndYear(
+        $titleId: ID!
+        $nameId: ID!
+        $useEntitlement: Boolean!
+        $jobCategoryId: ID!
+    ) {
+        name(id: $nameId) {
+            creditsV2(
+                first: 1
+                filter: {
+                    titleLevelFilter: { titleId: [$titleId] }
+                    creditLevelFilter: { groupings: [$jobCategoryId] }
+                }
+                useEntitlement: $useEntitlement
+            ) {
+                edges {
+                    node {
+                        episodeCredits(first: 0) {
+                            total
+                            yearRange {
+                                endYear
+                                year
+                            }
+                            ...creditDisplayableSeasonAndYear
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${g}
+`,p=n()`
+    query TitleDisplayableSeasonAndYear(
+        $titleId: ID!
+        $nameId: ID!
+        $useEntitlement: Boolean!
+        $jobCategoryId: ID!
+    ) {
+        title(id: $titleId) {
+            creditsV2(
+                first: 1
+                filter: {
+                    nameLevelFilter: { nameId: [$nameId] }
+                    creditLevelFilter: { groupings: [$jobCategoryId] }
+                }
+                useEntitlement: $useEntitlement
+            ) {
+                edges {
+                    node {
+                        episodeCredits(first: 0) {
+                            total
+                            yearRange {
+                                endYear
+                                year
+                            }
+                            ...creditDisplayableSeasonAndYear
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${g}
+`,_=n()`
+    fragment EpisodeNavV2 on EpisodeCreditConnection {
+        displayableYears(first: 100) {
+            total
+            edges {
+                node {
+                    year
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+        displayableSeasons(first: 100) {
+            total
+            edges {
+                node {
+                    season
+                    displayableProperty {
+                        value {
+                            plainText
+                        }
+                    }
+                }
+            }
+        }
+    }
+`,C=n()`
+    fragment EpisodeBottomSheetEpisodeCredit on CreditV2 {
+        title {
+            ...EpisodeBottomSheetTitleMetadata
+        }
+        creditedRoles(first: 250) {
+            edges {
+                node {
+                    text
+                    category {
+                        text
+                    }
+                    attributes {
+                        text
+                    }
+                    # Characters doesn't support pagination, instead the graph will serve up to 2,500 items
+                    characters(first: 2500) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${s}
+`,y=n()`
+    fragment EpisodeBottomSheetCredit on CreditV2 {
+        creditedRoles(first: 1) {
+            edges {
+                node {
+                    category {
+                        traits
+                    }
+                    characters(first: 0) {
+                        total
+                    }
+                }
+            }
+        }
+        episodeCredits(
+            first: 50
+            filter: $episodeCreditsFilter
+            sort: { by: RELEASE_DATE, order: ASC }
+        ) {
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
+            edges {
+                node {
+                    ...EpisodeBottomSheetEpisodeCredit
+                }
+            }
+        }
+        nav: episodeCredits(first: 0) {
+            ...EpisodeNavV2
+        }
+    }
+    ${C}
+    ${_}
+`,x=n()`
+    query NameEpisodeBottomSheetCredits(
+        $titleId: ID!
+        $nameId: ID!
+        $useEntitlement: Boolean!
+        $jobCategoryId: ID!
+        $projectStatus: [ID!]
+        $episodeCreditsFilter: EpisodeCreditsFilter
+    ) {
+        name(id: $nameId) {
+            creditsV2(
+                first: 1
+                filter: {
+                    titleLevelFilter: {
+                        titleId: [$titleId]
+                        projectStatus: $projectStatus
+                    }
+                    creditLevelFilter: { groupings: [$jobCategoryId] }
+                }
+                useEntitlement: $useEntitlement
+            ) {
+                edges {
+                    node {
+                        ...EpisodeBottomSheetCredit
+                    }
+                }
+            }
+        }
+    }
+    ${y}
+`,v=n()`
+    query TitleEpisodeBottomSheetCredits(
+        $titleId: ID!
+        $nameId: ID!
+        $useEntitlement: Boolean!
+        $jobCategoryId: ID!
+        $episodeCreditsFilter: EpisodeCreditsFilter
+    ) {
+        title(id: $titleId) {
+            creditsV2(
+                first: 1
+                filter: {
+                    nameLevelFilter: { nameId: [$nameId] }
+                    creditLevelFilter: { groupings: [$jobCategoryId] }
+                }
+                useEntitlement: $useEntitlement
+            ) {
+                edges {
+                    node {
+                        ...EpisodeBottomSheetCredit
+                    }
+                }
+            }
+        }
+    }
+    ${y}
+`,b=n()`
+    query NameEpisodeBottomSheetCreditsPagination(
+        $nameId: ID!
+        $after: ID
+        $titleId: ID!
+        $nameEpisodeCreditsFilter: NameEpisodeCreditsFilter
+        $useEntitlement: Boolean!
+    ) {
+        name(id: $nameId) {
+            episodeCredits(
+                first: 50
+                after: $after
+                seriesId: $titleId
+                filter: $nameEpisodeCreditsFilter
+                sort: { by: RELEASE_DATE, order: ASC }
+                useEntitlement: $useEntitlement
+            ) {
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+                edges {
+                    node {
+                        ...EpisodeBottomSheetEpisodeCredit
+                    }
+                }
+            }
+        }
+    }
+    ${C}
+`,T=n()`
+    query TitleEpisodeBottomSheetCreditsPagination(
+        $nameId: ID!
+        $after: ID
+        $titleId: ID!
+        $titleEpisodeCreditsFilter: TitleEpisodeCreditsFilter
+        $useEntitlement: Boolean!
+    ) {
+        title(id: $titleId) {
+            episodeCredits(
+                first: 50
+                after: $after
+                nameId: $nameId
+                filter: $titleEpisodeCreditsFilter
+                sort: RELEASE_DATE
+                useEntitlement: $useEntitlement
+            ) {
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+                edges {
+                    node {
+                        ...EpisodeBottomSheetEpisodeCredit
+                    }
+                }
+            }
+        }
+    }
+    ${C}
+`},88213:function(e,t,a){a.d(t,{ZP:function(){return $}});var r=a(52322),n=a(30382),i=a.n(n);a(2784);var s=a(19596),o=a(88169),d=a(86704),l=a(42712),c=a(41174),u=a(49666),f=a(66724),g=a(11438),h=a(85846),m=a(95441),p=a(83163),_=a(48687),C=a(19031);let y=(e,t)=>{let a=e?.title;if(t){let e=[];return a?.principalCreditsV2?.forEach(t=>{let a=t.grouping.text,r=[];t.credits.forEach(e=>{e.name.nameText?.text&&r.push({nameId:e.name.id,nameText:e.name.nameText.text})}),a&&r.length&&e.push({categoryText:a,credits:r})}),e}return[a?.principalCreators?.length?x(a.principalCreators[0]):void 0,a?.principalDirectors?.length?x(a.principalDirectors[0]):void 0,a?.principalCast?.length?x(a.principalCast[0]):void 0].filter(e=>!!e)},x=e=>{let t=[];if(e.credits.forEach(e=>{e.name.nameText?.text&&t.push({nameId:e.name.id,nameText:e.name.nameText.text})}),t.length&&e.category.text)return{categoryText:e.category.text,credits:t}},v=i()`
+    fragment TitleSummaryPromptCreditCategories on Title {
+        principalCast: principalCredits(filter: { categories: ["cast"] }) {
+            ...TitleSummaryPromptCredits
+        }
+        principalCreators: principalCredits(
+            filter: { categories: ["creator"] }
+        ) {
+            ...TitleSummaryPromptCredits
+        }
+        principalDirectors: principalCredits(
+            filter: { categories: ["director"] }
+        ) {
+            ...TitleSummaryPromptCredits
+        }
+        principalCreditsV2(filter: { mode: "NARROWED" }, useEntitlement: false)
+            @include(if: $isInPace) {
+            grouping {
+                text
+            }
+            credits(limit: 3) {
+                name {
+                    id
+                    nameText {
+                        text
+                    }
+                }
+            }
+        }
+    }
+
+    fragment TitleSummaryPromptCredits on PrincipalCreditsForCategory {
+        category {
+            text
+        }
+        credits(limit: 3) {
+            name {
+                id
+                nameText {
+                    text
+                }
+            }
+        }
+    }
+`,b=i()`
+    query Title_Summary_Prompt_From_Base(
+        $id: ID!
+        $location: WatchOptionsLocation
+        $isProPage: Boolean!
+        $includeUserPreferredServices: Boolean! = false
+        $isInPace: Boolean!
+    ) {
+        title(id: $id) {
+            ...TitleSummaryPromptCreditCategories
+            ...BaseTitlePromptShared
+        }
+        user @include(if: $includeUserPreferredServices) {
+            ...UserPreferredServices
+        }
+    }
+    ${C.qo}
+    ${v}
+    ${l.R}
+`,T=e=>{let{title:t,onClose:a,isOpen:n}=e,i=(0,u.ik)(),s=(0,c.nu)(),o=(0,h.ic)(),d=(0,_.hg)({weblabID:p.lh.IMDB_NEXT_USER_PREFERRED_SERVICES_INITIAL_1245110,treatments:{T1:!0}}),l=(0,_.hg)({weblabID:p.lh.IMDB_WEB_PACE_CREDITS_1201882,treatments:{T1:!0}}),f=d&&!i&&s;return(0,r.jsx)(C.Pz,{isOpen:n,onClose:a,title:t,queryOverride:{query:b,context:{serverSideCacheable:!1,personalized:f},variables:{id:t?.id??"",location:o,isProPage:i,includeUserPreferredServices:f,isInPace:l}},contentOverride:e=>{let t=y(e,l);if(t.length)return(0,r.jsx)(E,{"data-testid":"p_ct",children:t.map((e,t)=>(0,r.jsx)(I,{index:t+1,...e},e.categoryText))})}})},I=e=>{let{categoryText:t,credits:a,index:n}=e,{nameMainLinkBuilder:i}=(0,f.WOb)();return(0,r.jsxs)(D,{"data-testid":"c_ct",children:[(0,r.jsxs)(M,{children:[" ",t," "]}),(0,r.jsx)(o.InlineList,{showDividers:!0,inline:!0,children:a.map((e,a)=>(0,r.jsx)(o.InlineListItem,{children:(0,r.jsx)(S,{href:i({nconst:e.nameId,refSuffix:[{t:g.Cd.CREDIT,n:n},{t:g.Cd.EMPTY,n:a+1}]}),text:e.nameText},`name-link-${e.nameId}`)},`${t}-${e.nameId}`))})]})};var $=e=>(0,r.jsx)(g.xm,{value:g.Cd.TITLE_SUMMARY_PROMPT,children:(0,r.jsx)(T,{...e})});let S=(0,s.ZP)(o.TextLink).withConfig({componentId:"sc-655b2514-0"})(["font-size:",";",";display:inline;"],(0,d.setTypographyType)("bodySmall"),(0,d.setPropertyToColorVar)("color","ipt-on-baseAlt-textSecondary-color")),M=s.ZP.span.withConfig({componentId:"sc-655b2514-1"})(["font-size:",";",";margin-right:",";"],(0,d.setTypographyType)("subtitle2"),(0,d.setPropertyToColorVar)("color","ipt-on-baseAlt-textSecondary-color"),d.spacing.xs),D=s.ZP.div.withConfig({componentId:"sc-655b2514-2"})(["",";margin-bottom:",";"],(0,m.S)(1),d.spacing.xs),E=s.ZP.div.withConfig({componentId:"sc-655b2514-3"})(["margin:",";","{margin-left:0;margin-right:0;}"],d.spacing.s,d.mediaQueries.breakpoints.above.m)},22637:function(e,t,a){a.d(t,{w:function(){return d}});var r=a(52322);a(2784);var n=a(19596),i=a(88169),s=a(86704),o=a(59387);let d=e=>{let{suggestion:t,...a}=e;if(!t)return null;let{displayText:n,imageModel:s,metaText:d,entityType:c}=t,u=c===o.sW.TITLE?(0,r.jsx)(i.PosterImage,{imageModel:s,size:50}):(0,r.jsx)(i.AvatarImage,{imageModel:s,size:50});return(0,r.jsx)(l,{"data-testid":"test-autosuggestion",ariaLabel:n,title:n,preElement:u,subTextList:[{text:d}],...a})},l=(0,n.ZP)(i.MetaDataListSummaryItem).withConfig({componentId:"sc-ecf7d48b-0"})(["cursor:pointer;display:flex;gap:",";padding:",";button{cursor:pointer;}button:hover{",";}"],s.spacing.xs,s.spacing.xs,(0,s.setPropertyToColorVar)("color","ipt-on-base-textSecondary-color"))},25915:function(e,t,a){var r=a(52322),n=a(72779),i=a.n(n);a(2784);var s=a(53665),o=a(19596),d=a(88169),l=a(86704),c=a(25436),u=a(49996),f=a(66724),g=a(11438),h=a(63370),m=a(6935),p=a(12563);t.Z=e=>{let{index:t,className:a,listItem:n,posterHref:o}=e,l=(0,s.Z)(),C=(0,h.K)(n)??"",{subPageType:y}=(0,u.y)(),{makeRefMarker:x}=(0,g.Lz)(),{titleMainLinkBuilder:v}=(0,f.WOb)(),{isInWatchlist:b,isPending:T,ariaLabel:I,onClick:$}=(0,p.X)(n.titleId,x({t:g.Cd.WATCHLIST_RIBBON,n:t})),S=l.formatMessage({id:"common_ariaLabels_gotoTitle",defaultMessage:"View title page for {titleName}"},{titleName:C}),M=o??v({tconst:n.titleId,refSuffix:{t:g.Cd.POSTER,n:t}}),D=(0,m.K0)({height:n.primaryImage?.height,width:n.primaryImage?.width,url:n.primaryImage?.url,caption:{plainText:n.primaryImage?.caption}},n.primaryImage?.caption||C);return(0,r.jsx)(_,{className:i()(a,{"large-poster":c.SubPageType.BOX_OFFICE===y}),children:(0,r.jsx)(d.Poster,{ariaLabel:S,href:M,dynamicWidth:!0,imageProps:{imageModel:D,imageType:n.titleType.id,size:"s"},watchlistRibbonProps:{isLoading:T,inWatchlist:b,onClick:$,ariaLabel:I,"data-testid":`poster-watchlist-ribbon-${b?"remove":"add"}`}})})};let _=o.ZP.div.withConfig({componentId:"sc-d0224b4e-0"})(["display:flex;flex-shrink:0;margin-right:",";width:4.5rem;&.large-poster{width:5.575rem;}"],l.spacing.xs)},85435:function(e,t,a){var r=a(52322);a(2784);var n=a(19596),i=a(86704),s=a(48671);let o=n.ZP.div.withConfig({componentId:"sc-5fb85acc-0"})(["margin:",";"],i.spacing.xs);t.Z=e=>{let{items:t,AdvancedSearchPaginationProps:a}=e,{query:n,queryVariables:i,onDataReceived:d,total:l,pageSize:c,queryContext:u}=a,f=l&&l-t.length||0;return(0,r.jsx)(o,{children:f>0&&(0,r.jsx)(s.ZP,{query:n,queryVariables:i,queryContext:u,total:l??t.length,fetched:t.length,pageSize:c,onDataReceived:d,paginationType:"single-page"})})}},71750:function(e,t,a){a.d(t,{K5:function(){return _}});var r=a(52322),n=a(72779),i=a.n(n),s=a(2784),o=a(19596),d=a(50723),l=a(88169),c=a(82925),u=a(86704),f=a(43389),g=a(99449),h=a(61465);let m="selected-chip",p="disabled-chip",_=e=>{let t,{chipList:a,onRefinerSelect:n,selectedItems:o,accordionId:l}=e,u=o||[],_=s.useContext(c.Theme),x=(0,f.b)(l),v=e=>{let a;u.includes(e)?(t=u.filter(t=>t!==e),a=`${g.bc.remove}-${g.rC.chip}`):(t=[...u,e],a=`${g.bc.add}-${g.rC.chip}`),n(t),x({action:a,refinerLoggingParams:{inputValue:e,parsingLogic:h.A$}})};return(0,r.jsx)(y,{bottomPadding:"none",topPadding:"none",children:a?.map((e,t)=>{let a=u.includes(e.id),n=a||void 0===e.total?"":`${d.count(e.total)}`;return r.jsx(C,{"data-testid":"test-chip-id-"+e.id,onSelect:()=>v(e.id),filled:a,active:!a&&0===e.total,onColor:a?"accent2":void 0,label:e.text,secondaryText:n,postIconProps:a?{name:"clear"}:void 0,className:i()(_.palette.name,{[p]:0===e.total&&!a,[m]:a})},t)})})},C=(0,o.ZP)(l.Chip).withConfig({componentId:"sc-4f122448-0"})(["margin:0 0.5rem 0.5rem 0;flex-shrink:0;align-self:center;span{color:inherit;}&.","{pointer-events:none;&.dark{border:none;}&.light{",";}}&.light:not(.","):not(.","){",";}"],p,(0,u.setPropertyToColorVar)("color","ipt-baseAlt-shade1-color"),m,p,(0,u.setPropertyToColorVar)("border-color","ipt-baseAlt-shade2-color")),y=(0,o.ZP)(l.PageSection).withConfig({componentId:"sc-4f122448-1"})(["background-color:inherit;padding-top:2px;padding-left:2px;"])},83303:function(e,t,a){a.d(t,{_:function(){return l}});var r=a(52322);a(2784);var n=a(53665),i=a(19596),s=a(88169),o=a(86704),d=a(78919);let l=()=>{let e=(0,n.Z)();return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)(c,{"data-testid":"no-results-image-container-test-id",children:(0,r.jsx)(s.Icon,{name:"search-off"})}),(0,r.jsx)(u,{children:e.formatMessage(d.TY.noResultsHeadingText)}),(0,r.jsx)(f,{children:e.formatMessage(d.TY.noResultsSubHeadingText)})]})},c=i.ZP.div.withConfig({componentId:"sc-fc8877df-0"})(["display:flex;justify-content:center;svg{width:20%;height:20%;",";}"],(0,o.setPropertyToColorVar)("color","ipt-base-shade2-color")),u=i.ZP.h1.withConfig({componentId:"sc-fc8877df-1"})(["margin-bottom:",";margin-top:",";"," text-align:center;"],o.spacing.xs,o.spacing.xs,(0,o.setTypographyType)("headline5")),f=i.ZP.h1.withConfig({componentId:"sc-fc8877df-2"})(["margin-bottom:",";margin-top:",";"," text-align:center;"],o.spacing.xs,o.spacing.xs,(0,o.setTypographyType)("body"))},66970:function(e,t,a){var r=a(52322);a(2784);var n=a(53665),i=a(19596),s=a(86704);let o=i.ZP.div.withConfig({componentId:"sc-c70bb40c-0"})(["",";padding-top:0;"],(0,s.setTypographyType)("subtitle"));t.Z=e=>{let{messageDescriptor:t}=e,a=(0,n.Z)();return(0,r.jsx)(o,{children:a.formatMessage(t)})}},14708:function(e,t,a){a.d(t,{o1:function(){return C}});var r=a(52322),n=a(72779),i=a.n(n),s=a(2784),o=a(53665),d=a(19596),l=a(88169),c=a(86704),u=a(86958),f=a(49996),g=a(11438),h=a(78919),m=a(99449),p=a(61465);let _={EXPAND:"adv-search-expand-all"},C=e=>{let t=(0,o.Z)(),{makeRefMarker:a}=(0,g.Lz)(),n=t.formatMessage(h.TY.expandAll),d=t.formatMessage(h.TY.collapseAll),[c,C]=(0,s.useState)(!1),I=c?d:n,$=(0,l.useBreakpointsAsConfig)(),S=$&&($.xs||$.s),M=e.refinerAccordionList?.map(e=>e.id);(0,s.useEffect)(()=>{C(S),S?E(M):E(D)},[S]);let[D,E]=(0,s.useState)(e.accordionsToExpand),R=(0,f.y)(),A=(0,u.B)().context,w=e=>()=>{(0,p.c$)(R,m.Sn.Expand,a,e,void 0,A),E(t=>{let a=t?[...t]:[];return a.includes(e)||a.push(e),a})},P=e=>()=>{(0,p.c$)(R,m.Sn.Collapse,a,e,void 0,A),E(t=>{if(t)return t.filter(t=>t!==e)})};return(0,r.jsxs)(y,{className:i()(e.className),children:[(0,r.jsxs)(x,{children:[t.formatMessage(h.TY.searchFilters),!e.collabRefiners?.length&&(0,r.jsx)(T,{onSelect:()=>{c?(E([]),(0,p.c$)(R,m.jG.CollapseAll,a,void 0,void 0,A)):(E(M),(0,p.c$)(R,m.jG.ExpandAll,a,void 0,void 0,A)),C(!c)},postIcon:c?"expand-less":"expand-more",onColor:"accent2",width:"no-padding","data-testid":_.EXPAND,children:I},I)]}),e.refinerAccordionList.length>0&&(0,r.jsx)(b,{children:(0,r.jsx)(v,{items:e.refinerAccordionList.map(e=>({...e,onToggleOpen:w(e.id),onToggleClose:P(e.id)})),dividers:"between",className:"accordion",activeItemId:D,allowMultipleOpen:!0},I)}),e.collabRefiners]})},y=d.ZP.div.withConfig({componentId:"sc-495359e2-0"})(["margin-left:",";margin-right:",";margin-top:",";"],c.spacing.xs,c.spacing.xs,c.spacing.s),x=d.ZP.div.withConfig({componentId:"sc-495359e2-1"})(["margin-bottom:",";font-size:",";display:flex;justify-content:space-between;flex-wrap:wrap;"],c.spacing.s,(0,c.setTypographyType)("headline6")),v=(0,d.ZP)(l.Accordion).withConfig({componentId:"sc-495359e2-2"})(["margin-left:",";margin-right:",";"],c.spacing.xs,c.spacing.xs),b=(0,d.ZP)(l.PageBackground).withConfig({componentId:"sc-495359e2-3"})(["padding-top:none;padding-bottom:none;",";border:1px solid ",";"],(0,c.setPropertyToShapeVar)("border-radius","ipt-cornerRadius"),(0,c.getColorVar)("ipt-base-border-color")),T=(0,d.ZP)(l.TextButton).withConfig({componentId:"sc-495359e2-4"})(["font-size:",";text-align:left;min-height:fit-content;"],(0,c.setTypographyType)("subtitle"))},12699:function(e,t,a){a.d(t,{VW:function(){return _}});var r=a(52322);a(2784);var n=a(53665),i=a(19596),s=a(88169),o=a(31885),d=a(41174),l=a(49996),c=a(11438),u=a(78919),f=a(99449),g=a(61465);let h=(e,t,a,r,n,i)=>{e({...t,sortBy:r});let s=n.find(e=>e.sortBy===r);s&&(0,g.c$)(a,`${f.bc.sortBy}-${s.pageAction}`,i)},m=(e,t,a,r,n)=>{e({...t,sortOrder:r}),(0,g.c$)(a,`${f.bc.sortOrder}-${r.toLowerCase()}`,n)},p="adv-srch-sort-by",_=e=>{let{makeRefMarker:t}=(0,c.Lz)(),a=(0,n.Z)(),i=(0,l.y)(),f=(0,d.nu)(),g=e.sortByOptions.filter(e=>f||!e.requiresAuthentication),_=a=>{h(e.setCurrentSearchInput,e.currentSearchInput,i,a,g,t)},y=a=>{m(e.setCurrentSearchInput,e.currentSearchInput,i,a,t)},x={sortBy:e.currentSearchInput.sortBy||e.defaultSortByOption,sortOrder:e.currentSearchInput.sortOrder||(0,u.H6)(e.currentSearchInput.sortBy)},v=g.map(e=>({value:e.sortBy,text:a.formatMessage({id:e.labelId,defaultMessage:e.defaultLabel})})),b=a.formatMessage(u.TY.sortByLabel),T=a.formatMessage(u.TY.sortAscending),I=a.formatMessage(u.TY.sortDescending);return(0,r.jsxs)(C,{children:[(0,r.jsx)(s.SimpleSelect,{id:p,"data-testid":p,ariaLabel:b,label:b,orientLabel:"front",value:x.sortBy,options:v,onChange:e=>{_(e||x.sortBy)},includeEmptyOption:!1}),(0,r.jsx)(s.IconButton,{id:"adv-srch-sort-order","data-testid":"test-sort-order",label:x.sortOrder===o.Asd.Desc?I:T,onColor:"accent2",name:x.sortOrder===o.Asd.Desc?"descending":"ascending",onClick:()=>{x.sortOrder===o.Asd.Desc?y(o.Asd.Asc):y(o.Asd.Desc)}})]})},C=i.ZP.div.withConfig({componentId:"sc-68f22fb8-0"})(["margin-left:auto;display:flex;align-items:baseline;"])},89252:function(e,t,a){a.d(t,{J3:function(){return s},v$:function(){return o},h2:function(){return g},BD:function(){return d},bw:function(){return l},rq:function(){return f},fg:function(){return u},Q8:function(){return n},Pc:function(){return i},MV:function(){return c}});let r=(0,a(81999).vU)({excludeText:{id:"common_exclude",defaultMessage:"Exclude"}}),n=(e,t,a,r)=>t.filter(Boolean).map(t=>{let n={refiner:e,value:t,displayLabelOverride:a?.find(e=>e.id===t)?.text};return r&&(n.id=r),n}),i=(e,t,a)=>t?[{refiner:e,value:t,displayLabelOverride:a?.find(e=>e.id===t)?.text}]:void 0,s=(e,t)=>{let a=[];return t?.filter(e=>e.text).forEach(t=>{a.push({refiner:e,value:t.id,displayLabelOverride:t.text})}),a.length?a:void 0},o=(e,t,a)=>{let n=t.formatMessage(r.excludeText);return s(e,a)?.map(e=>({...e,displayLabelOverride:`${n} ${e.displayLabelOverride}`}))},d=(e,t,a,n)=>{let i=n.formatMessage(r.excludeText);return a.displayLabelOverride?.startsWith(i)?{include:e?.include,exclude:e?.exclude?.filter(e=>!t(e,a))}:{include:e?.include?.filter(e=>!t(e,a)),exclude:e?.exclude}},l=(e,t,a,r)=>{let n=d(e,t,a,r);return delete n.exclude,n},c=(e,t,a,r)=>{if(!r||!Object.entries(r)?.length)return;let n=[];return Object.entries(r).map(r=>{let i,[s,o]=r;a.filter(e=>s===e.id).map(t=>{i=e.formatMessage({id:t.labelId,defaultMessage:t.defaultLabel})}),o.forEach(e=>{n.push({refiner:t,id:s,value:e,displayLabelOverride:`${i}: ${e}`})})}),n},u=(e,t)=>t?.filter(t=>t!==e.value)??[],f=(e,t)=>{if(!t||!e.id)return;let a=t?.[e.id].filter(t=>t!==e.value);return a.length?t[e.id]=a:delete t[e.id],t},g=(e,t,a,i,s)=>{let{include:o,exclude:d}=a;return[...o?n(t,o,i,s):[],...d?n(t,d,i,s)?.map(t=>({...t,displayLabelOverride:`${e.formatMessage(r.excludeText)} ${t.displayLabelOverride??t.value}`})):[]]}},64492:function(e,t,a){a.d(t,{P$:function(){return _}});var r=a(52322),n=a(54073),i=a.n(n),s=a(2784),o=a(53665),d=a(19596),l=a(22376),c=a.n(l),u=a(88169),f=a(86704),g=a(67353),h=a(10105),m=a(78919);let p="autosuggest-input-test-id",_=e=>{let{testId:t,getSuggestions:a,onSuggestionSelected:n,renderedSuggestion:d,isMultiselect:l,isFetchingInitialSuggestions:u,isDisabled:f,placeholder:_}=e,[b,T]=(0,s.useState)([]),[I,$]=(0,s.useState)(!1),[S,M]=(0,s.useState)(!1),[D,E]=(0,s.useState)(),[R,A]=(0,s.useState)("");(0,s.useEffect)(()=>{P(R)},[u]);let w=(0,o.Z)().formatMessage(m.TY.autosuggestInput),P=i()(async e=>{let t=await a(e);M(!1),T(t)},300);return(0,r.jsx)(c(),{"data-testid":`${p}-${t}`,suggestions:b,getSuggestionValue:()=>R,onSuggestionHighlighted:e=>{let{suggestion:t}=e;t&&E(t)},inputProps:{value:R,onChange:async(e,t)=>{let{newValue:a}=t;$(!0),M(!0),A(a),P(a)},onFocus:async()=>{$(!0),u||T(await a(R))},onBlur:()=>{$(!1),A(""),E(void 0),T([])},onKeyPress:e=>{(0,g.isEnterKey)(e)&&(l&&D&&n?n(D):document.activeElement.blur())}},alwaysRenderSuggestions:!0,onSuggestionSelected:(e,t)=>{n&&(A(""),E(t.suggestion),(0,g.isEnterKey)(e)||n(t.suggestion),l||($(!1),n(t.suggestion),T([])))},renderInputComponent:e=>(0,r.jsxs)(y,{children:[(0,r.jsx)(C,{...e,type:"text",autoCapitalize:"off",autoCorrect:"off",autoComplete:"off",spellCheck:"true",disabled:f||!1,"aria-label":w,"data-testid":`${p}-${t}`,placeholder:_}),S&&(0,r.jsx)(x,{})]}),renderSuggestionsContainer:e=>{let{containerProps:a,children:n}=e;return(0,r.jsxs)(v,{...a,"data-testid":t+"-suggestions-container",children:[u&&I&&(0,r.jsx)(h.ZP,{height:50}),!u&&n]})},renderSuggestion:e=>{if(I)return(0,r.jsx)("div",{className:e===D?"react-autosuggest__suggestion--highlighted":"",children:d(e)})}})},C=d.ZP.input.withConfig({componentId:"sc-ed50659a-0"})(["width:100%;"]),y=d.ZP.div.withConfig({componentId:"sc-ed50659a-1"})(["position:relative;"]),x=(0,d.ZP)(u.Loader).withConfig({componentId:"sc-ed50659a-2"})(["position:absolute;right:1rem;width:2rem;height:2rem;"]),v=d.ZP.div.withConfig({componentId:"sc-ed50659a-3"})(["max-height:16.5rem;overflow-y:auto;position:static;overflow:overlay;z-index:500;border-bottom-left-radius:4px;border-bottom-right-radius:4px;",";box-shadow:0 0.0625rem 0.25rem 0;margin:0 0.25rem 0.25rem 0.25rem;.react-autosuggest__suggestion--highlighted{background-color:#f0f0f0;color:#333;}"],(0,f.setPropertyToColorVar)("box-shadow","ipt-on-base-rgb"))},66769:function(e,t,a){a.d(t,{V:function(){return b}});var r=a(52322),n=a(2784),i=a(53665),s=a(19596),o=a(88169),d=a(86704),l=a(22637),c=a(59387),u=a(86958),f=a(96908),g=a(49996),h=a(11438),m=a(10539),p=a(71750),_=a(64492),C=a(71757),y=a(99449),x=a(61465),v=a(27227);let b=e=>{let t;let a=C.y$.castOrCrewAccordionID,s=(0,n.useRef)(),o=(0,g.y)(),d=(0,i.Z)(),{makeRefMarker:b}=(0,h.Lz)(),M=(0,u.B)().context,D=e.currentSearchInput.roles?.names?.include??[],E=e.currentSearchInput.roles?.names?.exclude??[],R=e.currentSearchInput.roles?.jobCategories?.include??[],A=async e=>{let t=c.H1.NAMES;return await (0,m.x)(async()=>await (0,c.vt)(e,t),3)},w=t=>{e.setCurrentSearchInput({...e.currentSearchInput,roles:{...e.currentSearchInput.roles,names:{...e.currentSearchInput.roles?.names,include:D.filter(e=>e.id!==t.id)}}}),(0,x.c$)(o,`${y.bc.remove}-${y.rC.chip}`,b,a,void 0,M)},P=(0,v.U0)(R,e.searchItemMetadata),L=(0,r.jsx)($,{children:d.formatMessage({id:"search_title_role_credited_as",defaultMessage:"Credited as..."})}),B=R.length?(0,r.jsx)(S,{children:d.formatMessage({id:"search_title_role_remove_job_filters",defaultMessage:"To search for more people, remove job filters."})}):"";return 1===D.length&&0===E.length?t=(0,r.jsxs)("div",{children:[P.length?L:"",(0,r.jsx)(p.K5,{chipList:P,onRefinerSelect:t=>e.setCurrentSearchInput({...e.currentSearchInput,roles:{...e.currentSearchInput.roles,jobCategories:{...e.currentSearchInput.roles?.jobCategories,include:t.map(e=>({id:e,text:f.tl[e]}))}}}),selectedItems:R.map(e=>e.id),accordionId:a})]}):D.length>1&&(t=(0,r.jsxs)("div",{children:[L,(0,r.jsx)(S,{children:d.formatMessage({id:"search_title_role_remove_additional_people",defaultMessage:"To search job categories, remove additional people."})})]})),(0,r.jsxs)(T,{children:[(0,r.jsx)(_.P$,{testId:"test-castorcrew",getSuggestions:A,onSuggestionSelected:t=>{let r={id:t.id,text:t.displayText};e.setStringCache({...e.stringCache,[r.id]:r.text}),e.setCurrentSearchInput({...e.currentSearchInput,roles:{...e.currentSearchInput.roles,names:{...e.currentSearchInput.roles?.names,include:[...D,r]}}}),s.current!==t.id&&((0,x.c$)(o,y.bc.input,b,a,void 0,M),s.current=t.id)},renderedSuggestion:e=>(0,r.jsx)(l.w,{suggestion:e}),isDisabled:R.length>0,placeholder:d.formatMessage({id:"search_title_role_persons_name",defaultMessage:"Person's name"})}),B,D.map((e,t)=>(0,r.jsx)(I,{label:e?.text,postIconProps:{name:"clear"},onSelect:()=>w(e),"data-testid":"test-chip"},t)),t]})},T=s.ZP.div.withConfig({componentId:"sc-a7284700-0"})(["position:relative;padding-bottom:",";"],d.spacing.xs),I=(0,s.ZP)(o.Chip).withConfig({componentId:"sc-a7284700-1"})(["margin-top:",";margin-right:0.5rem;margin-bottom:0.5rem;flex-shrink:0;align-self:center;"],d.spacing.s),$=s.ZP.div.withConfig({componentId:"sc-a7284700-2"})([""," padding-bottom:",";"],(0,d.setTypographyType)("subtitle2"),d.spacing.xs),S=s.ZP.div.withConfig({componentId:"sc-a7284700-3"})(["",""],(0,d.setTypographyType)("bodySmall"))},6531:function(e,t,a){a.d(t,{h:function(){return d}});var r=a(52322);a(2784);var n=a(66970),i=a(71757),s=a(66769),o=a(27227);let d={name:"roles",createRefinerConstraint:o.Qy,getRefinerInputFromUrl:o.wz,getUrlFromRefinerInput:o.YM,getURLQueryParamsFromRefinerInput:o.JS,isDefaultRefinerValue:o.JX,parseRefinerInputToChipInput:o.T_,getRefinerAccordion:(e,t,a,o,d)=>({id:i.y$.castOrCrewAccordionID,indentLevel:"full",title:(0,r.jsx)(n.Z,{messageDescriptor:i.px.castOrCrewRefinerTitle}),children:(0,r.jsx)(s.V,{currentSearchInput:e,setCurrentSearchInput:t,stringCache:a,setStringCache:o,searchItemMetadata:d})}),overrideRemoveChipFromInput:o.f_,getRefinerTitle:o.Y2}},27227:function(e,t,a){a.d(t,{Qy:function(){return g},U0:function(){return f},wz:function(){return h},Y2:function(){return x},JS:function(){return p},YM:function(){return m},JX:function(){return _},f_:function(){return y},T_:function(){return C}});var r=a(96908),n=a(39948),i=a(49624),s=a(22669);let o=e=>void 0!==r.tl[e];var d=a(9767),l=a(89252),c=a(79119),u=a(22133);let f=(e,t)=>{let a=(t?.jobCategories??[]).map(e=>({...e,id:r.CZ[e.id]})),n=e.filter(e=>!a.some(t=>t.id===e.id)),i=[],s=[],o=e.map(e=>e.id);return a.forEach(e=>{o.includes(e.id)?i.push(e):s.push(e)}),[...n,...i,...s]},g=e=>{let{roles:t}=e;if(t?.names?.include?.length===1&&t?.jobCategories?.include?.length){let e=t.names.include[0].id;return{titleCreditsConstraint:{allCredits:t.jobCategories.include.map(t=>({nameId:e,jobCategory:r.tl[t.id]}))}}}return t?.names?.exclude?.length||t?.names?.include?.length?{titleCreditsConstraint:{allCredits:t.names.include?.map(e=>({nameId:e.id})),excludeCredits:t.names.exclude?.map(e=>({nameId:e.id}))}}:{}},h=(e,t)=>{let a=(0,n.xH)(e),i=(0,n.TF)(e),s=(a?.include?.length||0)+(a?.exclude?.length||0),l=(i?.include?.length||0)+(i?.exclude?.length||0),c={};return s>0&&(c.roles={names:{include:a?.include.filter(Boolean).filter(d.l).map(e=>({id:e,text:t[e]})),exclude:a?.exclude.filter(Boolean).filter(d.l).map(e=>({id:e,text:t[e]}))}}),l>0&&1===s&&(c.roles={...c.roles,jobCategories:{include:i?.include.filter(Boolean).filter(o).map(e=>({id:e,text:r.tl[e]})),exclude:i?.exclude.filter(Boolean).filter(o).map(e=>({id:e,text:r.tl[e]}))}}),c},m=(e,t)=>{let a=(e.roles?.names?.include?.length||0)+(e.roles?.names?.exclude?.length||0),r=(e.roles?.jobCategories?.include?.length||0)+(e.roles?.jobCategories?.exclude?.length||0);if(a+r===0)return"";let i=[],s=t;if(a){let t=(0,n.iB)(e.roles?.names?.include?.map(e=>e.id),e.roles?.names?.exclude?.map(e=>e.id)),a=(0,u.yx)(t.key,t.value,s);i.push(a),s+=a}if(1===a&&r>0){let t=(0,n.wg)(e.roles?.jobCategories?.include?.map(e=>e.id)||[],e.roles?.jobCategories?.exclude?.map(e=>e.id)||[]),a=(0,u.yx)(t.key,t.value,s);i.push(a)}return i.join("")},p=e=>{let t=(e.roles?.names?.include?.length||0)+(e.roles?.names?.exclude?.length||0),a=(e.roles?.jobCategories?.include?.length||0)+(e.roles?.jobCategories?.exclude?.length||0);if(t+a===0)return[];let r=[];return t&&r.push(...(0,s.q)(i.Oo.Role,e.roles?.names,e=>e.id)),1===t&&a>0&&r.push(...(0,s.q)(i.Oo.Role,e.roles?.jobCategories,e=>e.id)),r},_=e=>!e.roles?.names?.exclude?.length&&!e.roles?.names?.include?.length,C=(e,t)=>{let{value:a}=e;return[...(0,l.J3)("roles",a?.names?.include)||[],...(0,l.v$)("roles",t,a?.names?.exclude)||[],...(0,l.J3)("roles",a?.jobCategories?.include)||[],...(0,l.v$)("roles",t,a?.jobCategories?.exclude)||[]]},y=(e,t,a)=>{let r={},n=(0,l.BD)(e?.names||{},(e,t)=>e.id===t.value,t,a);if(!(n.include?.length||n.exclude?.length))return r;r.names=n;let i=(0,l.BD)(e?.jobCategories||{},(e,t)=>e.id===t.value,t,a);return(i.include?.length||i.exclude?.length)&&(r.jobCategories=i),r},x=(e,t)=>{let{roles:a}=e;if(!a)return"";let r=[],n=(a.names?.include||[]).filter(e=>e.text?.length).map(e=>e.text).join(", ");n.length&&r.push(t.formatMessage(c.d.WITH_PREFIX,{target:n})),(a.jobCategories?.include||[]).filter(e=>e.text.length).map(e=>e.text).forEach(e=>r.push(e));let i=(a.names?.exclude||[]).filter(e=>e.text.length).map(e=>e.text).join(", ");i&&r.push(t.formatMessage(c.d.WITHOUT_PREFIX,{target:i}));let s=(a.jobCategories?.exclude||[]).filter(e=>e.text.length).map(e=>e.text).join(", ");return s&&r.push(t.formatMessage(c.d.NOT_PREFIX,{refinerValue:s})),r.filter(e=>e.length).join(", ")}},59259:function(e,t,a){a.d(t,{$H:function(){return _}});var r=a(52322),n=a(88169),i=a(86704);a(2784);var s=a(53665),o=a(19596),d=a(49996),l=a(11438),c=a(71750),u=a(99449),f=a(61465),g=a(71757);let h=[{id:"Documentary",message:{id:"search_title_genre_documentary",defaultMessage:"Documentary"}},{id:"Short",message:{id:"search_title_genre_short",defaultMessage:"Short"}}],m=(e,t)=>a=>t({...e,genres:{...e.genres,include:a}}),p=(e,t,a,r,n,i)=>s=>{let o;s?(t({...e,genres:{...e.genres,exclude:[...e.genres?.exclude||[],n.id]}}),o=`${u.bc.add}-${u.rC.checkbox}-${u.tw.exclude}`):(t({...e,genres:{...e.genres,exclude:e.genres?.exclude?.filter(e=>e!==n.id)||[]}}),o=`${u.bc.remove}-${u.rC.checkbox}-${u.tw.exclude}`),(0,f.c$)(a,o,i,r,{inputValue:n.id,parsingLogic:f.A$})},_=e=>{let{currentSearchInput:t,setCurrentSearchInput:a,searchItemMetadata:i}=e,o=(0,d.y)(),{makeRefMarker:u}=(0,l.Lz)(),f=g.y$.genreAccordionID,_=(0,s.Z)(),x=_.formatMessage(g.E5.excludeText),v=e=>!!t.genres?.exclude?.filter(t=>t===e).length;return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)(c.K5,{chipList:i?.genres,onRefinerSelect:m(t,a),selectedItems:t.genres?.include,accordionId:f}),(0,r.jsxs)("div",{"data-testid":"genre_exclude_container",children:[(0,r.jsx)(y,{children:x}),(0,r.jsx)(C,{"data-testid":"genre_exclude_section",children:h.map(e=>(0,r.jsx)(n.CheckBox,{ariaLabel:_.formatMessage(e.message),checked:v(e.id),id:`exclude-${e.id.toLowerCase()}-checkbox`,label:_.formatMessage(e.message),name:e.id,"data-testid":"genre_exclude_checkbox_"+e.id,onChange:p(t,a,o,f,e,u)},e.id))})]})]})},C=o.ZP.div.withConfig({componentId:"sc-4ff3b527-0"})([""," align-items:center;display:inline-flex;width:100%;"],(0,i.setTypographyType)("body")),y=o.ZP.h2.withConfig({componentId:"sc-4ff3b527-1"})([""," margin:"," 0 0;"],(0,i.setTypographyType)("body"),i.spacing.xs)},65870:function(e,t,a){a.d(t,{D:function(){return g}});var r=a(52322);a(2784);var n=a(66970),i=a(71757),s=a(59259),o=a(39948),d=a(22669),l=a(49624),c=a(97214),u=a(22133),f=a(89252);let g={name:"genres",createRefinerConstraint:e=>{let{genres:t}=e;return t?.include?.length||t?.exclude?.length?{genreConstraint:{allGenreIds:t.include,excludeGenreIds:t.exclude}}:{}},getRefinerInputFromUrl:e=>{let t=(0,o.GM)(e);return t?.exclude||t?.include?{genres:t}:{}},getUrlFromRefinerInput:(e,t)=>{if(!e.genres?.include?.length&&!e.genres?.exclude?.length)return"";let a=(0,o.Eg)(e.genres.include?.map(e=>e.toString().toLocaleLowerCase()),e.genres.exclude?.map(e=>e.toString().toLocaleLowerCase()));return(0,u.yx)(a.key,a.value,t)},getURLQueryParamsFromRefinerInput:e=>(0,d.q)(l.Oo.Genre,e.genres,e=>e.toString().toLocaleLowerCase()),isDefaultRefinerValue:e=>!e.genres?.include?.length&&!e.genres?.exclude?.length,parseRefinerInputToChipInput:(e,t)=>{let{value:a,chipTextMapper:r}=e;return(0,f.h2)(t,"genres",{include:a?.include??[],exclude:a?.exclude??[]},r)},getRefinerAccordion:(e,t,a,o,d)=>({id:i.y$.genreAccordionID,indentLevel:"full",title:(0,r.jsx)(n.Z,{messageDescriptor:i.px.genreRefinerTitle}),children:(0,r.jsx)(s.$H,{searchItemMetadata:d,currentSearchInput:e,setCurrentSearchInput:t})}),overrideRemoveChipFromInput:(e,t,a)=>(0,f.BD)(e||{},(e,t)=>e===t.value,t,a),getRefinerTitle:(e,t,a)=>{let{genres:r}=e;return r?[...r.include?.map(e=>a.genres?.find(t=>t.id===e)?.text??e)??[],...r.exclude?.map(e=>{let r=a.genres?.find(t=>t.id===e)?.text??e;return r?c.Ul(r,t):e})??[]].join(", "):""}}},60843:function(e,t,a){a.d(t,{Q:function(){return y}});var r=a(52322),n=a(2784),i=a(53665),s=a(19596),o=a(88169),d=a(86704),l=a(67353),c=a(86958),u=a(49996),f=a(11438),g=a(99449),h=a(16100),m=a(61465),p=a(82584),_=a(71757),C=a(13749);let y=e=>{let{currentSearchInput:t,setCurrentSearchInput:a}=e,s=(0,i.Z)(),{makeRefMarker:o}=(0,f.Lz)(),d=t.releaseDate?.start,y=t.releaseDate?.end,[$,S]=(0,n.useState)(d),[M,D]=(0,n.useState)(y),[E,R]=(0,n.useState)(),[A,w]=(0,n.useState)(),P=(e,r)=>{let n="releaseDateEnd"===e?{...t.releaseDate,end:r}:{...t.releaseDate,start:r};a({...t,releaseDate:n})};(0,n.useEffect)(()=>{let e=d?.substring(0,7)??"";S(d??""),R(e)},[d]),(0,n.useEffect)(()=>{let e=y?.substring(0,7)??"";D(y??""),w(e)},[y]);let L=(0,m.SX)(),B=(0,u.y)(),N=(0,c.B)().context;return(0,r.jsxs)(x,{children:[(0,r.jsx)(I,{children:s.formatMessage(C.TY.fullDateRefinerSubtext)}),(0,r.jsxs)(v,{children:[(0,r.jsx)(T,{type:"date",name:C.e0,value:$,"data-testid":C.CL,autoComplete:"off",ariaLabel:s.formatMessage(_.px.releaseDateAboveLabel),onBlur:e=>{P("releaseDateStart",""===e.target.value?void 0:e.target.value),L.current.from!==$&&((0,m.c$)(B,`${g.bc.input}-${g.UD.from}`,o,_.y$.releaseDateAccordionID,void 0,N),L.current.from=$)},onChange:e=>{S(e.target.value)},onKeyPress:e=>{(0,l.isEnterKey)(e)&&document.activeElement.blur()}}),(0,r.jsx)(I,{children:` ${s.formatMessage(_.E5.toText)} `}),(0,r.jsx)(T,{type:"date",name:C.W5,value:M,"data-testid":C.t9,ariaLabel:s.formatMessage(_.px.releaseDateBelowLabel),onBlur:e=>{P("releaseDateEnd",""===e.target.value?void 0:e.target.value),L.current.to!==M&&((0,m.c$)(B,`${g.bc.input}-${g.UD.to}`,o,_.y$.releaseDateAccordionID,void 0,N),L.current.to=M)},onChange:e=>{D(e.target.value)},onKeyPress:e=>{(0,l.isEnterKey)(e)&&document.activeElement.blur()}})]}),(0,r.jsx)(I,{children:s.formatMessage(C.TY.yearMonthRefinerSubtext)}),(0,r.jsxs)(b,{children:[(0,r.jsx)(T,{name:C.kF,value:E,"data-testid":C.VT,ariaLabel:s.formatMessage(_.px.releaseDateAboveLabel),onChange:e=>{R(e.target.value)},onBlur:e=>{let t=(0,p.X)(e.target.value,void 0,C.Kc,C.cE);R(t),P("releaseDateStart",t?t+"-01":t),L.current.to!==E&&((0,m.c$)(B,`${g.bc.input}-${g.UD.to}`,o,_.y$.releaseDateAccordionID,void 0,N),L.current.to=E)},onKeyPress:e=>{(0,l.isEnterKey)(e)&&document.activeElement.blur()},maxLength:7}),(0,r.jsx)(I,{children:` ${s.formatMessage(_.E5.toText)} `}),(0,r.jsx)(T,{name:C.Me,value:A,"data-testid":C.xz,ariaLabel:s.formatMessage(_.px.releaseDateBelowLabel),onChange:e=>{w(e.target.value)},onBlur:e=>{let t=(0,p.X)(e.target.value,!0,C.Kc,C.cE);w(t),P("releaseDateEnd",t?t+"-"+(0,h.m)(t):t),L.current.to!==A&&((0,m.c$)(B,`${g.bc.input}-${g.UD.to}`,o,_.y$.releaseDateAccordionID,void 0,N),L.current.to=A)},onKeyPress:e=>{(0,l.isEnterKey)(e)&&document.activeElement.blur()},maxLength:7})]})]})},x=s.ZP.div.withConfig({componentId:"sc-e2d3558-0"})(["position:relative;padding-bottom:",";"],d.spacing.xs),v=s.ZP.div.withConfig({componentId:"sc-e2d3558-1"})(["","{display:flex;align-items:center;}"],d.mediaQueries.breakpoints.above.xl),b=s.ZP.div.withConfig({componentId:"sc-e2d3558-2"})(["","{display:flex;align-items:center;}"],d.mediaQueries.breakpoints.above.xs),T=(0,s.ZP)(o.TextInput).withConfig({componentId:"sc-e2d3558-3"})(["width:100%;"]),I=s.ZP.p.withConfig({componentId:"sc-e2d3558-4"})(["padding:",";"],d.spacing.xs)},13749:function(e,t,a){a.d(t,{CL:function(){return n},Kc:function(){return g},Me:function(){return u},TY:function(){return p},VT:function(){return d},W5:function(){return o},Y9:function(){return h},cE:function(){return f},e0:function(){return s},kF:function(){return c},rJ:function(){return m},t9:function(){return i},xz:function(){return l}});var r=a(81999);let n="releaseDate-start",i="releaseDate-end",s="release-date-start-input",o="release-date-end-input",d="releaseYearMonth-start",l="releaseYearMonth-end",c="release-yearmonth-start-input",u="release-yearmonth-end-input",f=new Date().getFullYear()+50,g=1700,h=`${g}-01-01`,m=`${f}-12-31`,p=(0,r.vU)({yearMonthRefinerSubtext:{id:"search_main_advanced_search_yearmonth_subtext",defaultMessage:"or just enter yyyy, or yyyy-mm below"},fullDateRefinerSubtext:{id:"search_main_advanced_search_fulldate_subtext",defaultMessage:"Enter full date"},exactDate:{id:"search_main_advanced_search_refiner_releasedate_exact",defaultMessage:"Release Date: {exactDate}"},dateRange:{id:"search_main_advanced_search_refiner_releasedate_start_to_end",defaultMessage:"Release Date: {startDate} to {endDate}"},startDateOnly:{id:"search_main_advanced_search_refiner_releasedate_start_only",defaultMessage:"Release Date: after {startDate}"},endDateOnly:{id:"search_main_advanced_search_refiner_releasedate_end_only",defaultMessage:"Release Date: before {endDate}"}})},27954:function(e,t,a){a.d(t,{W:function(){return C}});var r=a(52322);a(2784);var n=a(66970),i=a(71757),s=a(60843),o=a(1207),d=a(39948),l=a(22669),c=a(49624),u=a(98977),f=a(97214),g=a(22133),h=a(13749);let m=e=>{if(!e)return;let t=new Date(e).getFullYear();return t<h.Kc?h.Y9:t>h.cE?h.rJ:e},p=e=>{if(!e)return;let t=new Date(e).getFullYear();return t>h.cE?h.rJ:t<h.Kc?h.Y9:e},_=(e,t)=>{if(!t||!t.start&&!t.end)return;let a=(0,o.C9)(t.start,e),r=(0,o.C9)(t.end,e);return a&&a===r?e.formatMessage(h.TY.exactDate,{exactDate:a}):a&&r?e.formatMessage(h.TY.dateRange,{startDate:a,endDate:r}):a?e.formatMessage(h.TY.startDateOnly,{startDate:a}):r?e.formatMessage(h.TY.endDateOnly,{endDate:r}):void 0},C={name:"releaseDate",createRefinerConstraint:e=>{let{releaseDate:t}=e;return t?.start||t?.end?{releaseDateConstraint:{releaseDateRange:{start:t.start,end:t.end}}}:{}},getRefinerInputFromUrl:e=>{let t=(0,d.v)(e);if(t?.startDate||t?.endDate)return{releaseDate:{start:m(t.startDate),end:p(t.endDate)}};if(e[c.Oo.ReleaseYear]){let t=(0,g.Q5)(e[c.Oo.ReleaseYear]);return void 0===t.start&&void 0===t.end&&(t=(0,u.cN)(e[c.Oo.ReleaseYear])),{releaseDate:{start:m(t.start),end:p(t.end)}}}return{}},getUrlFromRefinerInput:(e,t)=>{if(!e.releaseDate?.start&&!e.releaseDate?.end)return"";let a=(0,d.VX)(e.releaseDate.start,e.releaseDate.end);return(0,g.yx)(a.key,a.value,t)},getURLQueryParamsFromRefinerInput:e=>(0,l.g)(c.Oo.ReleaseDate,[e.releaseDate?.start,e.releaseDate?.end]),isDefaultRefinerValue:e=>!e.releaseDate?.end&&!e.releaseDate?.start,parseRefinerInputToChipInput:(e,t)=>{let{value:a}=e,r=t.formatMessage(i.px.releaseDateRefinerTitle),n=a?_(t,a):void 0;return n?[{refiner:"releaseDate",value:r,displayLabelOverride:n}]:void 0},getRefinerAccordion:(e,t)=>({id:i.y$.releaseDateAccordionID,indentLevel:"full",title:(0,r.jsx)(n.Z,{messageDescriptor:i.px.releaseDateRefinerTitle}),children:(0,r.jsx)(s.Q,{currentSearchInput:e,setCurrentSearchInput:t})}),getRefinerTitle:(e,t)=>{let{releaseDate:a}=e;if(!a)return"";let{start:r,end:n}=a,s=t.formatMessage(i.px.releaseDateRefinerTitle);return(0,f.E6)(s,r,n,t)}}},2169:function(e,t,a){a.d(t,{w:function(){return u}});var r=a(31885),n=a(49624),i=a(98977),s=a(30115),o=a(97214),d=a(22133),l=a(71757),c=a(9663);let u={name:"sort",getSortByOptions:e=>e?l.Xx:l.Xx.filter(e=>!e.requiresAuthentication),getUrlFromRefinerInput(e,t){if(this.isDefaultRefinerValue(e))return"";let a=e.sortBy??l.Po,r=e.sortOrder??(0,l.L9)(a),i=c.h[a],s=r.toLowerCase();return(0,d.yx)(n.Oo.Sort,[i,s],t)},getURLQueryParamsFromRefinerInput(e){if(this.isDefaultRefinerValue(e))return[];let t=e.sortBy??l.Po,a=e.sortOrder??(0,l.L9)(t),r=c.h[t],n=a.toLowerCase();return[{key:"sort",values:[{rawValue:(0,i.U$)([r,n]),excluded:!1}]}]},getRefinerInputFromUrl(e,t,a){if(!e[n.Oo.Sort]?.length)return{};let r=(0,s._U)(e,c.h,"sortBy","sortOrder"),i=r?.sortBy??l.Po,o=l.Xx.find(e=>i===e.sortBy);return!a&&o?.requiresAuthentication?{}:{sortBy:i,sortOrder:r?.sortOrder??(0,l.L9)(i)}},isDefaultRefinerValue:e=>{let{sortBy:t,sortOrder:a}=e,r=(0,l.L9)(t);return!(t&&t!==l.Po||a&&a!==r)},getRefinerTitle:(e,t)=>(0,o.Os)(e.sortBy||r.VBf.Popularity,e.sortOrder||r.Asd.Asc,l.Xx,t)}},38980:function(e,t,a){a.d(t,{K:function(){return D}});var r=a(52322),n=a(2784),i=a(66970),s=a(71757),o=a(53665),d=a(19596),l=a(88169),c=a(86704),u=a(67353),f=a(71411),g=a(86958),h=a(49996),m=a(11438),p=a(99449),_=a(61465);let C=(0,a(81999).vU)({titleNamePlaceholder:{id:"search_main_advanced_search_refiner_titlename_placeholder",defaultMessage:"e.g. The Godfather"}}),y=e=>{let{makeRefMarker:t}=(0,m.Lz)(),[a,i]=(0,n.useState)(e.titleName??""),d=(0,n.useRef)(),c=(0,h.y)(),y=(0,g.B)().context,[v,b]=(0,n.useState)(!1);(0,n.useEffect)(()=>{i(e.titleName??""),e.onResultsButtonClick&&e.isEmptyState&&v&&(e.onResultsButtonClick(),b(!1))},[e.titleName,v]);let T=(0,o.Z)();return(0,r.jsx)(x,{children:(0,r.jsx)(l.TextInput,{value:a,"data-testid":"test-titlename",name:"title-name-input",onChange:e=>{i(e.target.value||"")},onBlur:r=>{e.onRefinerInput(r.target.value),d.current!==a&&((0,_.c$)(c,p.bc.input,t,s.y$.titleNameAccordionID,void 0,y),d.current=a)},onKeyPress:e=>{(0,u.isEnterKey)(e)&&(b(!0),(0,_.c$)(c,`${p.bc.enter}-${p.rC.resultsButton}`,t,void 0,void 0,y),document.activeElement.blur())},onKeyDown:e=>(0,f.S)(e,850),ariaLabel:T.formatMessage(s.px.titleNameRefinerTitle),placeholder:T.formatMessage(C.titleNamePlaceholder)})})},x=d.ZP.div.withConfig({componentId:"sc-778d9b65-0"})(["position:relative;padding-bottom:",";"],c.spacing.xs),v=(e,t)=>a=>{t({...e,name:a})};var b=a(39948),T=a(22669),I=a(49624),$=a(89252),S=a(22133),M=a(97214);let D={name:"name",createRefinerConstraint:e=>{let{name:t}=e;return t?{titleTextConstraint:{searchTerm:t}}:{}},getRefinerInputFromUrl:e=>{let t=(0,b.CK)(e);return t?{name:t}:{}},getUrlFromRefinerInput:(e,t)=>{if(!e.name)return"";let a=(0,b.vL)(e.name);return(0,S.yx)(a.key,encodeURIComponent(a.value),t)},getURLQueryParamsFromRefinerInput:e=>(0,T.g)(I.Oo.TitleName,[e.name]),isDefaultRefinerValue:e=>!e.name,parseRefinerInputToChipInput:(e,t)=>{let{value:a}=e,r=$.Pc("name",a)?.[0];if(r){let e=t.formatMessage(s.px.titleNameRefinerTitle);return r.displayLabelOverride=`${e}: "${a}"`,[r]}},getRefinerAccordion:(e,t,a,n,o,d,l)=>({id:s.y$.titleNameAccordionID,indentLevel:"full",title:(0,r.jsx)(i.Z,{messageDescriptor:s.px.titleNameRefinerTitle}),children:(0,r.jsx)(y,{onRefinerInput:v(e,t),titleName:e.name,onResultsButtonClick:d,isEmptyState:l})}),getRefinerTitle:(e,t)=>{let{name:a}=e;return a?(0,M.rB)(t.formatMessage(s.px.titleNameRefinerTitle),a,t):""}}},71757:function(e,t,a){a.d(t,{C5:function(){return _},E5:function(){return h},L9:function(){return d},Po:function(){return s},Uf:function(){return o},V:function(){return p},Xx:function(){return l},_M:function(){return m},jD:function(){return g},px:function(){return u},y$:function(){return f}});var r=a(81999),n=a(31885),i=a(49624);let s=n.VBf.Popularity,o=n.Asd.Asc,d=e=>e===n.VBf.UserRating||e===n.VBf.MyRating?n.Asd.Desc:o,l=[{labelId:"search_main_advanced_search_sort_popularity",defaultLabel:"Popularity",sortBy:n.VBf.Popularity,pageAction:"pop",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_alphabetical",defaultLabel:"A-Z",sortBy:n.VBf.TitleRegional,pageAction:"alpha",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_user_rating",defaultLabel:"User rating",sortBy:n.VBf.UserRating,pageAction:"ur",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_num_votes",defaultLabel:"Number of ratings",sortBy:n.VBf.UserRatingCount,pageAction:"nor",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_box_office",defaultLabel:"US box office",sortBy:n.VBf.BoxOfficeGrossDomestic,pageAction:"ubo",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_runtime",defaultLabel:"Runtime",sortBy:n.VBf.Runtime,pageAction:"run",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_year",defaultLabel:"Year",sortBy:n.VBf.Year,pageAction:"year",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_release_date",defaultLabel:"Release date",sortBy:n.VBf.ReleaseDate,pageAction:"rd",requiresAuthentication:!1},{labelId:"search_main_advanced_search_sort_rating_date",defaultLabel:"Date of your rating",sortBy:n.VBf.MyRatingDate,pageAction:"doyr",requiresAuthentication:!0},{labelId:"search_main_advanced_search_sort_your_rating",defaultLabel:"Your rating",sortBy:n.VBf.MyRating,pageAction:"yr",requiresAuthentication:!0}],c=(0,r.vU)({color:{id:"search_main_advanced_search_refiner_colorinfo_colorchip",defaultMessage:"Color"},blackAndWhite:{id:"search_main_advanced_search_refiner_colorinfo_blackandwhitechip",defaultMessage:"Black & White"},colorized:{id:"search_main_advanced_search_refiner_colorinfo_colorizedchip",defaultMessage:"Colorized"},aces:{id:"search_main_advanced_search_refiner_colorinfo_aceschip",defaultMessage:"ACES"}}),u=(0,r.vU)({runtimeAboveLabel:{id:"search_main_advanced_search_refiner_runtime_above_label",defaultMessage:"Enter runtime above"},runtimeBelowLabel:{id:"search_main_advanced_search_refiner_runtime_below_label",defaultMessage:"Enter runtime below"},numOfVotesAboveLabel:{id:"search_main_advanced_search_refiner_numofvotes_above_label",defaultMessage:"Enter number of votes above"},numOfVotesBelowLabel:{id:"search_main_advanced_search_refiner_numofvotes_below_label",defaultMessage:"Enter number of votes below"},imdbRatingsAboveLabel:{id:"search_main_advanced_search_refiner_ratings_above_label",defaultMessage:"Enter IMDb ratings above"},imdbRatingsBelowLabel:{id:"search_main_advanced_search_refiner_ratings_below_label",defaultMessage:"Enter IMDb ratings below"},imdbPopularityRankAboveLabel:{id:"search_main_advanced_search_refiner_rankings_above_label",defaultMessage:"Enter IMDb popularity rank above"},imdbPopularityRankBelowLabel:{id:"search_main_advanced_search_refiner_rankings_below_label",defaultMessage:"Enter IMDb popularity rank below"},metadataKeywords:{id:"search_main_advanced_search_browse_keywords_link_text",defaultMessage:"Keywords"},titleSearchEmptyHeader:{id:"search_main_advanced_search_section_title_empty_state_header",defaultMessage:"Create a more specific title search"},titleSearchEmptyAlt:{id:"search_main_advanced_search_section_title_empty_state_alt",defaultMessage:"Search for names instead."},genreRefinerTitle:{id:"search_main_advanced_search_refiner_genre",defaultMessage:"Genre"},titleTypeRefinerTitle:{id:"search_main_advanced_search_refiner_titletype",defaultMessage:"Title type"},usCertsRefinerTitle:{id:"search_main_advanced_search_refiner_uscerts",defaultMessage:"US certificates"},imdbRatingsRefinerTitle:{id:"search_main_advanced_search_refiner_imdbratings",defaultMessage:"IMDb ratings"},titleNameRefinerTitle:{id:"search_main_advanced_search_refiner_titlename",defaultMessage:"Title name"},titleCompaniesRefinerTitle:{id:"search_main_advanced_search_refiner_companies",defaultMessage:"Companies"},titleAdultTitlesRefinerTitle:{id:"search_main_advanced_search_refiner_adulttitles",defaultMessage:"Adult titles"},titleIncludeAdultTitlesText:{id:"search_main_advanced_search_refiner_adulttitles_include",defaultMessage:"Include adult titles"},titleExcludeAdultTitlesText:{id:"search_main_advanced_search_refiner_adulttitles_exclude",defaultMessage:"Exclude adult titles"},titleRuntimeRefinerTitle:{id:"search_main_advanced_search_refiner_runtime",defaultMessage:"Runtime"},titleNumOfVotesRefinerTitle:{id:"search_main_advanced_search_refiner_numofvotes",defaultMessage:"Number of votes"},titlePopularityRankRefinerTitle:{id:"search_main_advanced_search_refiner_popularityrank",defaultMessage:"IMDb popularity rank"},castOrCrewRefinerTitle:{id:"search_main_advanced_search_refiner_castorcrew",defaultMessage:"Cast or crew"},charactersRefinerTitle:{id:"search_main_advanced_search_refiner_characters",defaultMessage:"Characters"},charactersRefinerChipTitle:{id:"search_main_advanced_search_refiner_character",defaultMessage:"Character"},titleNamePlaceholder:{id:"search_main_advanced_search_refiner_titlename_placeholder",defaultMessage:"e.g. The Godfather"},seeResults:{id:"search_main_advanced_search_see_results",defaultMessage:"See results"},releaseDateRefinerTitle:{id:"search_main_advanced_search_refiner_releasedate",defaultMessage:"Release date"},releaseDateAboveLabel:{id:"search_main_advanced_search_refiner_releasedate_above_label",defaultMessage:"Enter release date above"},releaseDateBelowLabel:{id:"search_main_advanced_search_refiner_releasedate_below_label",defaultMessage:"Enter release date below"},colorInfoRefinerTitle:{id:"search_main_advanced_search_refiner_colorinfo",defaultMessage:"Color info"},runtimeRefinerSubtext:{id:"search_main_advanced_search_refiner_runtime_subtext",defaultMessage:"In minutes"},watchOptionsTitle:{id:"search_main_advanced_search_refiner_watchoptions",defaultMessage:"Instant watch options"},awardsTitle:{id:"search_main_advanced_search_refiner_awardsandspecialrec",defaultMessage:"Awards & recognition"},searchFilters:{id:"search_main_advanced_search_search_filters_text",defaultMessage:"Search filters"},inTheatersTitle:{id:"search_main_advanced_search_refiner_intheaters",defaultMessage:"In theaters"},inTheatersShowAllText:{id:"search_main_advanced_search_refiner_intheaters_showall",defaultMessage:"Show all titles"},inTheatersNearYouText:{id:"search_main_advanced_search_refiner_intheaters_nearyou",defaultMessage:"In theaters near you"},inTheatersFavoriteText:{id:"search_main_advanced_search_refiner_intheaters_fav",defaultMessage:"In favorite theaters"},inTheatersOnlineTicketingText:{id:"search_main_advanced_search_refiner_intheaters_onlineticketing",defaultMessage:"In theaters with online ticketing (US only)"},RatedByYouTitle:{id:"search_main_advanced_search_refiner_ratedbyyou",defaultMessage:"Rated by you"},RatedByYouIncludeAllText:{id:"search_main_advanced_search_refiner_ratedbyyou_includeall",defaultMessage:"Include all titles"},RatedByYouExcludeText:{id:"search_main_advanced_search_refiner_ratedbyyou_exclude",defaultMessage:"Exclude titles I've seen"},RatedByYouRestrictText:{id:"search_main_advanced_search_refiner_ratedbyyou_restrict",defaultMessage:"Restrict to titles I've seen"},keywordsRefinerTitle:{id:"search_main_advanced_search_refiner_keywords",defaultMessage:"Keywords"},keywordsRefinerChipTitle:{id:"search_main_advanced_search_refiner_keyword",defaultMessage:"Keyword"},keywordsRefinerExcludeChipTitle:{id:"search_main_advanced_search_refiner_exclude_keyword",defaultMessage:"Exclude keyword"},keywordsSeeMore:{id:"search_main_advanced_search_refiner_keywords_seemore",defaultMessage:"See more keywords"},keywordsSeeFewer:{id:"search_main_advanced_search_refiner_keywords_seefewer",defaultMessage:"See fewer keywords"},keywordsFilterLabel:{id:"search_main_advanced_search_refiner_keywords_label",defaultMessage:"Filter by additional keywords"},soundMixTitle:{id:"search_main_advanced_search_refiner_soundmix",defaultMessage:"Sound mix"},primaryCountryText:{id:"search_main_advanced_search_refiner_country_primary_text",defaultMessage:"Search country of origin only"},primaryCountryHeaderText:{id:"search_main_advanced_search_refiner_country_primary_header_text",defaultMessage:"{country} (primary)"},countryRefinerTitle:{id:"search_main_advanced_search_refiner_country",defaultMessage:"Country"},primaryLanguageText:{id:"search_main_advanced_search_refiner_language_primary_text",defaultMessage:"Search primary language only"},primaryLanguageHeaderText:{id:"search_main_advanced_search_refiner_language_primary_header_text",defaultMessage:"{language} (primary)"},languageRefinerTitle:{id:"search_main_advanced_search_refiner_languages",defaultMessage:"Languages"},pageTopicsRefinerTitle:{id:"search_main_advanced_search_refiner_pagetopics",defaultMessage:"Page topics"},pageTopicsRefinerSubtext:{id:"search_main_advanced_search_title_pagetopics_chiptext",defaultMessage:"Only includes titles with the selected topics"},withinPageTopicsPlaceholder:{id:"search_main_advanced_search_refiner_pagetopics_placeholder",defaultMessage:"e.g. Wild horse"},withinPageTopicsSelectText:{id:"search_main_advanced_search_refiner_pagetopics_selecttext",defaultMessage:"Search within topic"},yourListsRefinerTitle:{id:"search_main_advanced_search_refiner_your_lists",defaultMessage:"Your lists"},plotAuthorRefinerTitle:{id:"search_main_advanced_search_refiner_plotAuthor",defaultMessage:"Plot author"},advancedTitleSearchHeaderSubtextEmptyState:{id:"search_title_page_header_subtext_empty",defaultMessage:"Discover IMDb's robust title search. Mix and match info to refine your searches. Looking for 1970s Canadian horror films rated above 6 by at least 100 users? Find them here. All fields below are optional, but at least one is needed for a search. For ranges (release date, votes), use 'min' for larger/after and 'max' for smaller/before. You can also press 'Enter' after checking a box or focusing on a field."}}),f={adultTitlesAccordionID:"adultTitlesAccordion",awardsAccordionID:"awardsAccordion",castOrCrewAccordionID:"castOrCrewAccordion",certificatesAccordionID:"certsAccordion",charactersAccordionID:"charactersAccordion",colorInfoAccordionID:"colorInfoAccordion",companiesAccordionID:"companiesAccordion",countryAccordionID:"countryAccordion",genreAccordionID:"genreAccordion",pageTopicsAccordionID:"pageTopicsAccordion",ratingsAccordionID:"ratingsAccordion",titleNameAccordionID:"titleNameAccordion",titleTypeAccordionID:"titleTypeAccordion",releaseDateAccordionID:"releaseDateAccordion",runtimeAccordionID:"runtimeAccordion",watchOptionAccordionID:"watchOptionAccordion",inTheatersAccordionID:"inTheatersAccordion",soundMixAccordionID:"soundMixAccordion",seriesAccordionID:"seriesAccordion",keywordsAccordionID:"keywordsAccordion",languagesAccordionID:"languagesAccordion",numOfVotesAccordionID:"numOfVotesAccordion",ratedByYouAccordionID:"ratedByYouAccordion",yourListsAccordionID:"yourListsAccordion",popularityRankAccordionID:"popularityRankAccordion"},g=[{id:n.rs3.Color,text:c.color},{id:n.rs3.BlackAndWhite,text:c.blackAndWhite},{id:n.rs3.Colorized,text:c.colorized},{id:n.rs3.Aces,text:c.aces}],h=(0,r.vU)({eg:{id:"common_eg",defaultMessage:"e.g."},excludeText:{id:"common_exclude",defaultMessage:"Exclude"},includeText:{id:"common_include",defaultMessage:"Include"},toText:{id:"common_to",defaultMessage:"to"}}),m={[i.Oo.Characters]:"characters",[i.Oo.Keywords]:"keywords",[i.Oo.NumOfVotes]:"numOfVotes",[i.Oo.ReleaseYear]:"releaseDate",[i.Oo.Genre]:"genres",[i.Oo.Rating]:"ratings",[i.Oo.Credits]:"roles"},p={[i.Oo.Characters]:f.charactersAccordionID,[i.Oo.Keywords]:f.keywordsAccordionID,[i.Oo.NumOfVotes]:f.numOfVotesAccordionID,[i.Oo.ReleaseYear]:f.releaseDateAccordionID,[i.Oo.Genre]:f.genreAccordionID,[i.Oo.Rating]:f.ratingsAccordionID,[i.Oo.Credits]:f.castOrCrewAccordionID},_=[f.titleTypeAccordionID,f.genreAccordionID]},9663:function(e,t,a){a.d(t,{f:function(){return s},h:function(){return i}});var r=a(31885),n=a(30115);let i={[r.VBf.Popularity]:n.kq.MOVIEMETER,[r.VBf.TitleRegional]:n.kq.ALPHABETICAL,[r.VBf.UserRating]:n.kq.USER_RATING,[r.VBf.UserRatingCount]:n.kq.NUM_VOTES,[r.VBf.BoxOfficeGrossDomestic]:n.kq.BOX_OFFICE_US,[r.VBf.Runtime]:n.kq.RUNTIME,[r.VBf.Year]:n.kq.YEAR,[r.VBf.ReleaseDate]:n.kq.RELEASE_DATE,[r.VBf.MyRatingDate]:n.kq.YOUR_RATING_DATE,[r.VBf.MyRating]:n.kq.YOUR_RATING},s={aces:r.rs3.Aces,color:r.rs3.Color,black_and_white:r.rs3.BlackAndWhite,colorized:r.rs3.Colorized}},36692:function(e,t,a){a.d(t,{Q7:function(){return s},fy:function(){return n}});var r=a(2529);let n=(e,t)=>{let a=i(e),r=t?.roles;if(!r||!s(t))return;let n=r.jobCategories?.include?.map(e=>e.id);return n?.length&&a.crews.sort((e,t)=>(n.includes(t.category.id)?1:0)-(n.includes(e.category.id)?1:0)),a},i=e=>{let t=e.credits,a={crews:[]};return t&&t.edges&&t.edges.forEach(e=>{let t=e.node,n=t.attributes?.map(e=>e.text)||[];r.k.some(e=>e===t.category.id)?a.cast={attributes:n,category:t.category,characters:t.characters?.map(e=>e.name)||[]}:a.crews.push({attributes:n,category:t.category})}),a},s=e=>e?.roles?.names?.include?.length===1?e.roles.names.include[0].id:void 0},93694:function(e,t,a){a.d(t,{t:function(){return i}});var r=a(86054),n=a(36692);let i=(e,t)=>{let a=e?.advancedTitleSearch?.edges,i=[],s=e?.advancedTitleSearch?.total??0;return a?.forEach(e=>{let a=e.node.title,o={...r.rf(a,!1),creditsMetadataForName:n.fy(a,t)};""!==o.titleText||""!==o.originalTitleText?i.push(o):s--}),{titleListItems:i,total:s,endCursor:e?.advancedTitleSearch?.pageInfo.endCursor}}},77690:function(e,t,a){a.d(t,{M:function(){return i}});var r=a(78919),n=a(71757);let i=(e,t,a)=>{let i=t.reduce((t,r)=>({...t,...r.createRefinerConstraint(e,a)}),{}),s=e.sortBy??n.Po,o=e.sortOrder??(0,n.L9)(s);return{first:e.count||r.b_,sortBy:s,sortOrder:o,...i}}},78919:function(e,t,a){a.d(t,{$E:function(){return d},H:function(){return c},H6:function(){return h},TY:function(){return u},U_:function(){return g},Vs:function(){return o},b_:function(){return l},fz:function(){return m},pq:function(){return p},qQ:function(){return f}});var r=a(81999),n=a(31885),i=a(87801),s=a(74492);let o=i.l.ADVANCED_SEARCH,d=s.N.Titles,l=50,c=1e3,u=(0,r.vU)({autosuggestInput:{id:"search_main_advanced_search_autosuggest_input_field",defaultMesage:"Autosuggest input field"},toText:{id:"common_to",defaultMessage:"to"},includeText:{id:"common_include",defaultMessage:"Include"},excludeText:{id:"common_exclude",defaultMessage:"Exclude"},edit:{id:"common_buttons_edit",defaultMessage:"Edit"},metadataTitle:{id:"search_main_advanced_search_section_title",defaultMessage:"Advanced search"},sectionName:{id:"search_main_advanced_search_section_title",defaultMessage:"Advanced search"},emptySearchSubtext:{id:"search_main_advanced_search_empty_state_description",defaultMessage:"Create a search using a variety of options to filter the different types of information we have in our catalog."},and:{id:"common_and",defaultMessage:"and"},helpSite:{id:"search_main_advanced_search_page_header_subtext_help_site",defaultMessage:"help site"},faqs:{id:"search_main_advanced_search_page_header_subtext_faqs",defaultMessage:"FAQs."},headerSubtextHelpLink:{id:"search_main_advanced_search_page_header_subtext_help_text",defaultMessage:"To learn more please visit our"},seeResults:{id:"search_main_advanced_search_see_results",defaultMessage:"See results"},seriesTitle:{id:"search_main_advanced_search_refiner_series",defaultMessage:"Series"},sortByLabel:{id:"search_main_advanced_search_sort_by",defaultMessage:"Sort by"},sortAscending:{id:"common_sort_ascending",defaultMessage:"Ascending sort order"},sortDescending:{id:"common_sort_descending",defaultMessage:"Descending sort order"},awardsTitle:{id:"search_main_advanced_search_refiner_awardsandspecialrec",defaultMessage:"Awards & recognition"},searchFilters:{id:"search_main_advanced_search_search_filters_text",defaultMessage:"Search filters"},noResultsHeadingText:{id:"search_main_advanced_search_no_results_heading",defaultMessage:"No results found"},noResultsSubHeadingText:{id:"search_main_advanced_search_no_results_subheading",defaultMessage:"Please adjust your filters or start a new search"},resultsCount:{id:"common_results_count",defaultMessage:"{start}-{displayedCount} of {total}"},expandAll:{id:"search_main_advanced_search_expand_all",defaultMessage:"Expand all"},collapseAll:{id:"search_main_advanced_search_collapse_all",defaultMessage:"Collapse all"},yearMonthRefinerSubtext:{id:"search_main_advanced_search_yearmonth_subtext",defaultMessage:"or just enter yyyy, or yyyy-mm below"},fullDateRefinerSubtext:{id:"search_main_advanced_search_fulldate_subtext",defaultMessage:"Enter full date"},emptyLists:{id:"search_main_advanced_search_empty_lists",defaultMessage:"You don't have any lists yet."},eg:{id:"common_eg",defaultMessage:"e.g."}}),f=(0,r.vU)({companies:{id:"search_main_advanced_search_pro_cta_companies",defaultMessage:"View full company info for {target}"},companies_empty:{id:"search_main_advanced_search_pro_cta_companies_empty",defaultMessage:"View full company info"}}),g=n.Asd.Asc,h=e=>e===n.VBf.UserRating||e===n.VBf.MyRating?n.Asd.Desc:g,m={watchlist:n.JQJ.WatchList,checkins:n.JQJ.CheckIns},p={helpSite:"https://help.imdb.com/article/imdb/discover-watch/using-the-advanced-search-feature/GLUEUYWPQNPTEVPU#",faqs:"https://help.imdb.com/article/imdb/new-features-updates/advanced-search-redesign/G73SLJ6K33AA6NB5#"}},74492:function(e,t,a){var r,n,i,s;a.d(t,{N:function(){return r},b:function(){return n}}),(i=r||(r={})).Titles="title",i.Names="name",i.Collaborations="common",(s=n||(n={})).Include="include",s.Exclude="exclude"},2422:function(e,t,a){a.d(t,{EY:function(){return g},JP:function(){return h},ZK:function(){return m},ZQ:function(){return l}});var r=a(30382),n=a.n(r),i=a(88758),s=a(36543),o=a(50155),d=a(36692);let l=n()`
+    fragment TitleSearchFacetFields on AdvancedTitleSearchConnection {
+        genres: facet(facetField: GENRES, limit: 30) {
+            filterId
+            text
+            total
+        }
+
+        keywords: facet(facetField: KEYWORDS, limit: 100) {
+            filterId
+            text
+            total
+        }
+
+        titleTypes: facet(facetField: TITLE_TYPE, limit: 25) {
+            filterId
+            text
+            total
+        }
+
+        jobCategories: facet(facetField: NAME_JOB_CATEGORIES) {
+            filterId
+            text
+            total
+        }
+    }
+`,c=e=>n()`
+    fragment TitleSearchCredits on Title {
+        credits(first: 5,
+            filter: {
+                names: ["${e}"]
+            }
+        ) {
+            edges {
+                node {
+                    ...CreditMetaData
+                }
+            }
+        }
+    }
+    ${o.w}
+`,u=e=>n()`
+    query AdvancedTitleSearchWithCreditMetadata(
+        $first: Int!
+        $after: String
+        $titleTypeConstraint: TitleTypeSearchConstraint
+        $interestConstraint: InterestSearchConstraint
+        $genreConstraint: GenreSearchConstraint
+        $certificateConstraint: CertificateSearchConstraint
+        $characterConstraint: CharacterSearchConstraint
+        $userRatingsConstraint: UserRatingsSearchConstraint
+        $titleTextConstraint: TitleTextSearchConstraint
+        $creditedCompanyConstraint: CreditedCompanySearchConstraint
+        $explicitContentConstraint: ExplicitContentSearchConstraint
+        $sortBy: AdvancedTitleSearchSortBy!
+        $sortOrder: SortOrder!
+        $releaseDateConstraint: ReleaseDateSearchConstraint
+        $colorationConstraint: ColorationSearchConstraint
+        $runtimeConstraint: RuntimeSearchConstraint
+        $watchOptionsConstraint: WatchOptionsSearchConstraint
+        $awardConstraint: AwardSearchConstraint
+        $rankedTitleListConstraint: RankedTitleListSearchConstraint
+        $titleCreditsConstraint: TitleCreditsConstraint
+        $inTheatersConstraint: InTheatersSearchConstraint
+        $soundMixConstraint: SoundMixSearchConstraint
+        $keywordConstraint: KeywordSearchConstraint
+        $originCountryConstraint: OriginCountrySearchConstraint
+        $languageConstraint: LanguageSearchConstraint
+        $episodicConstraint: EpisodicSearchConstraint
+        $alternateVersionMatchingConstraint: AlternateVersionMatchingSearchConstraint
+        $crazyCreditMatchingConstraint: CrazyCreditMatchingSearchConstraint
+        $goofMatchingConstraint: GoofMatchingSearchConstraint
+        $filmingLocationConstraint: FilmingLocationSearchConstraint
+        $plotMatchingConstraint: PlotMatchingSearchConstraint
+        $quoteMatchingConstraint: TitleQuoteMatchingSearchConstraint
+        $soundtrackMatchingConstraint: SoundtrackMatchingSearchConstraint
+        $triviaMatchingConstraint: TitleTriviaMatchingSearchConstraint
+        $withTitleDataConstraint: WithTitleDataSearchConstraint
+        $myRatingConstraint: MyRatingSearchConstraint
+        $listConstraint: ListSearchConstraint
+    ) {
+        advancedTitleSearch(
+            first: $first
+            after: $after
+            constraints: {
+                titleTypeConstraint: $titleTypeConstraint
+                genreConstraint: $genreConstraint
+                certificateConstraint: $certificateConstraint
+                characterConstraint: $characterConstraint
+                userRatingsConstraint: $userRatingsConstraint
+                titleTextConstraint: $titleTextConstraint
+                creditedCompanyConstraint: $creditedCompanyConstraint
+                explicitContentConstraint: $explicitContentConstraint
+                releaseDateConstraint: $releaseDateConstraint
+                colorationConstraint: $colorationConstraint
+                runtimeConstraint: $runtimeConstraint
+                watchOptionsConstraint: $watchOptionsConstraint
+                awardConstraint: $awardConstraint
+                rankedTitleListConstraint: $rankedTitleListConstraint
+                titleCreditsConstraint: $titleCreditsConstraint
+                inTheatersConstraint: $inTheatersConstraint
+                soundMixConstraint: $soundMixConstraint
+                keywordConstraint: $keywordConstraint
+                originCountryConstraint: $originCountryConstraint
+                languageConstraint: $languageConstraint
+                episodicConstraint: $episodicConstraint
+                alternateVersionMatchingConstraint: $alternateVersionMatchingConstraint
+                crazyCreditMatchingConstraint: $crazyCreditMatchingConstraint
+                goofMatchingConstraint: $goofMatchingConstraint
+                filmingLocationConstraint: $filmingLocationConstraint
+                plotMatchingConstraint: $plotMatchingConstraint
+                quoteMatchingConstraint: $quoteMatchingConstraint
+                soundtrackMatchingConstraint: $soundtrackMatchingConstraint
+                triviaMatchingConstraint: $triviaMatchingConstraint
+                withTitleDataConstraint: $withTitleDataConstraint
+                myRatingConstraint: $myRatingConstraint
+                listConstraint: $listConstraint
+                interestConstraint: $interestConstraint
+            }
+            sort: { sortBy: $sortBy, sortOrder: $sortOrder }
+        ) {
+            total
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+            ...TitleSearchFacetFields
+            edges {
+                node {
+                    title {
+                        ...TitleListItemMetadata
+                        ...TitleListItemMetascore
+                        ...TitleSearchCredits
+                    }
+                }
+            }
+        }
+    }
+
+    ${s.Zz}
+    ${s._A}
+    ${l}
+    ${c(e)}
+`,f=n()`
+    query AdvancedTitleSearch(
+        $first: Int!
+        $after: String
+        $titleTypeConstraint: TitleTypeSearchConstraint
+        $interestConstraint: InterestSearchConstraint
+        $genreConstraint: GenreSearchConstraint
+        $certificateConstraint: CertificateSearchConstraint
+        $characterConstraint: CharacterSearchConstraint
+        $userRatingsConstraint: UserRatingsSearchConstraint
+        $titleTextConstraint: TitleTextSearchConstraint
+        $creditedCompanyConstraint: CreditedCompanySearchConstraint
+        $explicitContentConstraint: ExplicitContentSearchConstraint
+        $sortBy: AdvancedTitleSearchSortBy!
+        $sortOrder: SortOrder!
+        $releaseDateConstraint: ReleaseDateSearchConstraint
+        $colorationConstraint: ColorationSearchConstraint
+        $runtimeConstraint: RuntimeSearchConstraint
+        $watchOptionsConstraint: WatchOptionsSearchConstraint
+        $awardConstraint: AwardSearchConstraint
+        $rankedTitleListConstraint: RankedTitleListSearchConstraint
+        $titleCreditsConstraint: TitleCreditsConstraint
+        $inTheatersConstraint: InTheatersSearchConstraint
+        $soundMixConstraint: SoundMixSearchConstraint
+        $keywordConstraint: KeywordSearchConstraint
+        $originCountryConstraint: OriginCountrySearchConstraint
+        $languageConstraint: LanguageSearchConstraint
+        $episodicConstraint: EpisodicSearchConstraint
+        $alternateVersionMatchingConstraint: AlternateVersionMatchingSearchConstraint
+        $crazyCreditMatchingConstraint: CrazyCreditMatchingSearchConstraint
+        $goofMatchingConstraint: GoofMatchingSearchConstraint
+        $filmingLocationConstraint: FilmingLocationSearchConstraint
+        $plotMatchingConstraint: PlotMatchingSearchConstraint
+        $quoteMatchingConstraint: TitleQuoteMatchingSearchConstraint
+        $soundtrackMatchingConstraint: SoundtrackMatchingSearchConstraint
+        $triviaMatchingConstraint: TitleTriviaMatchingSearchConstraint
+        $withTitleDataConstraint: WithTitleDataSearchConstraint
+        $myRatingConstraint: MyRatingSearchConstraint
+        $listConstraint: ListSearchConstraint
+    ) {
+        advancedTitleSearch(
+            first: $first
+            after: $after
+            constraints: {
+                titleTypeConstraint: $titleTypeConstraint
+                genreConstraint: $genreConstraint
+                certificateConstraint: $certificateConstraint
+                characterConstraint: $characterConstraint
+                userRatingsConstraint: $userRatingsConstraint
+                titleTextConstraint: $titleTextConstraint
+                creditedCompanyConstraint: $creditedCompanyConstraint
+                explicitContentConstraint: $explicitContentConstraint
+                releaseDateConstraint: $releaseDateConstraint
+                colorationConstraint: $colorationConstraint
+                runtimeConstraint: $runtimeConstraint
+                watchOptionsConstraint: $watchOptionsConstraint
+                awardConstraint: $awardConstraint
+                rankedTitleListConstraint: $rankedTitleListConstraint
+                titleCreditsConstraint: $titleCreditsConstraint
+                inTheatersConstraint: $inTheatersConstraint
+                soundMixConstraint: $soundMixConstraint
+                keywordConstraint: $keywordConstraint
+                originCountryConstraint: $originCountryConstraint
+                languageConstraint: $languageConstraint
+                episodicConstraint: $episodicConstraint
+                alternateVersionMatchingConstraint: $alternateVersionMatchingConstraint
+                crazyCreditMatchingConstraint: $crazyCreditMatchingConstraint
+                goofMatchingConstraint: $goofMatchingConstraint
+                filmingLocationConstraint: $filmingLocationConstraint
+                plotMatchingConstraint: $plotMatchingConstraint
+                quoteMatchingConstraint: $quoteMatchingConstraint
+                soundtrackMatchingConstraint: $soundtrackMatchingConstraint
+                triviaMatchingConstraint: $triviaMatchingConstraint
+                withTitleDataConstraint: $withTitleDataConstraint
+                myRatingConstraint: $myRatingConstraint
+                listConstraint: $listConstraint
+                interestConstraint: $interestConstraint
+            }
+            sort: { sortBy: $sortBy, sortOrder: $sortOrder }
+        ) {
+            total
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+            ...TitleSearchFacetFields
+            edges {
+                node {
+                    title {
+                        ...TitleListItemMetadata
+                        ...TitleListItemMetascore
+                    }
+                }
+            }
+        }
+    }
+
+    ${s.Zz}
+    ${s._A}
+    ${l}
+`,g=e=>{let t=(0,d.Q7)(e);return t?u(t):f},h=n()`
+    query AdvancedNameSearch(
+        $first: Int!
+        $after: String
+        $originalTitleText: Boolean
+        $refTagQueryParam: String
+        $sortBy: AdvancedNameSearchSortBy!
+        $sortOrder: SortOrder!
+        $nameTextConstraint: NameTextSearchConstraint
+        $birthDateConstraint: BirthDateSearchConstraint
+        $deathDateConstraint: DeathDateSearchConstraint
+        $awardConstraint: AwardSearchConstraint
+        $listConstraint: ListSearchConstraint
+        $filmographyConstraint: FilmographySearchConstraint
+        $explicitContentConstraint: ExplicitContentSearchConstraint
+        $genderIdentityConstraint: GenderIdentitySearchConstraint
+        $biographyConstraint: BiographySearchConstraint
+        $quoteMatchingConstraint: NameQuoteMatchingSearchConstraint
+        $triviaMatchingConstraint: NameTriviaMatchingSearchConstraint
+        $birthPlaceConstraint: BirthPlaceSearchConstraint
+        $deathPlaceConstraint: DeathPlaceSearchConstraint
+        $withNameDataConstraint: WithNameDataSearchConstraint
+        $isInPace: Boolean! = false
+    ) {
+        advancedNameSearch(
+            first: $first
+            after: $after
+            constraints: {
+                nameTextConstraint: $nameTextConstraint
+                birthDateConstraint: $birthDateConstraint
+                awardConstraint: $awardConstraint
+                listConstraint: $listConstraint
+                filmographyConstraint: $filmographyConstraint
+                explicitContentConstraint: $explicitContentConstraint
+                genderIdentityConstraint: $genderIdentityConstraint
+                deathDateConstraint: $deathDateConstraint
+                biographyConstraint: $biographyConstraint
+                quoteMatchingConstraint: $quoteMatchingConstraint
+                triviaMatchingConstraint: $triviaMatchingConstraint
+                birthPlaceConstraint: $birthPlaceConstraint
+                deathPlaceConstraint: $deathPlaceConstraint
+                withNameDataConstraint: $withNameDataConstraint
+            }
+            sort: { sortBy: $sortBy, sortOrder: $sortOrder }
+        ) {
+            total
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+            edges {
+                node {
+                    name {
+                        ...NameListItemMetadata
+                    }
+                }
+            }
+        }
+    }
+    ${i.E}
+`;n()`
+    query AdvancedTitleSearchMetadata {
+        titleMetadata {
+            titleGenres {
+                text
+                genreId
+            }
+            titleTypes {
+                text
+                id
+            }
+        }
+    }
+`,n()`
+    query NameIdsToNameText($ids: [ID!]!) {
+        names(ids: $ids) {
+            id
+            nameText {
+                text
+            }
+        }
+    }
+`;let m=n()`
+    query AdvancedSearchYourLists($listElementType: ListTypeId, $after: ID) {
+        lists(
+            first: 250
+            filter: { classTypes: [LIST], listElementType: $listElementType }
+            after: $after
+        ) {
+            total
+            pageInfo {
+                endCursor
+            }
+            edges {
+                node {
+                    id
+                    name {
+                        originalText
+                    }
+                }
+            }
+        }
+    }
+`;n()`
+    query TitlesText($ids: [ID!]!) {
+        titles(ids: $ids) {
+            id
+            titleText {
+                text
+            }
+            originalTitleText {
+                text
+            }
+        }
+    }
+`,n()`
+    query Interests($ids: [ID!]!) {
+        interests(ids: $ids) {
+            id
+            primaryText {
+                id
+                text
+            }
+        }
+    }
+`,n()`
+    query List($id: ID!) {
+        list(id: $id) {
+            id
+            name {
+                originalText
+            }
+            listType {
+                id
+            }
+        }
+    }
+`,n()`
+    query CompanyIdsToNameText($ids: [ID!]) {
+        companies(ids: $ids) {
+            companyText {
+                text
+            }
+            id
+            country {
+                id
+            }
+        }
+    }
+`},16100:function(e,t,a){a.d(t,{m:function(){return r}});let r=e=>{let[t,a]=e.split("-").map(Number),r=new Date(t,a,1);return r.setDate(r.getDate()-1),r.getDate().toString()}},79119:function(e,t,a){a.d(t,{d:function(){return r}});let r={RANGED_INPUT_START:{id:"search_main_ranged_input_description_start",defaultMessage:"{refinerName} at least {start}"},RANGED_INPUT_END:{id:"search_main_ranged_input_description_end",defaultMessage:"{refinerName} at most {end}"},RANGED_INPUT_RANGE:{id:"search_main_ranged_input_description_range",defaultMessage:"{refinerName} between {start} and {end}"},RANGED_INPUT_EXACT:{id:"search_main_ranged_input_description_exact",defaultMessage:"{refinerName} of {exactDate}"},NOT_PREFIX:{id:"search_main_input_description_not",defaultMessage:"Not {refinerValue}"},WITH_PREFIX:{id:"search_input_description_with",defaultMessage:"With {target}"},WITHOUT_PREFIX:{id:"search_input_description_without",defaultMessage:"Without {target}"},REFINER_MATCHING:{id:"search_title_input_description_matching",defaultMessage:'{refiner} matching "{target}"'},SORTED_BY_STRING:{id:"search_main_advanced_search_sorted_by",defaultMessage:"Sorted by {sortBy} {sortOrder}"},SORT_ORDER_PREFIX:"search_main_advanced_search_sort_order_",DEFAULT_DESCRIPTION:{id:"search_default_page_description",defaultMessage:"IMDb's advanced search allows you to run extremely powerful queries over all people and titles in the database. Find exactly what you're looking for!"}}},97214:function(e,t,a){a.d(t,{E6:function(){return o},Jq:function(){return s},Os:function(){return d},Ul:function(){return l},rB:function(){return c}});var r=a(31885),n=a(15112),i=a(79119);let s=(e,t,a,r,s,o,d)=>{let l=s.formatMessage(i.d.DEFAULT_DESCRIPTION);if((0,n.n)(r,t))return{header:e,description:l,title:e,headerSubtext:d};let c=t.map(e=>e.getRefinerTitle(r,s,o)).filter(e=>e.length),u=`${c.join(", ")}`;return{title:`${u} (${a.getRefinerTitle(r,s)})`,description:l,header:e,headerSubtext:d}},o=(e,t,a,r)=>a&&t&&a===t?r.formatMessage(i.d.RANGED_INPUT_EXACT,{refinerName:e,exactDate:t}):a&&t?r.formatMessage(i.d.RANGED_INPUT_RANGE,{refinerName:e,start:t,end:a}):t&&!a?r.formatMessage(i.d.RANGED_INPUT_START,{refinerName:e,start:t}):a&&!t?r.formatMessage(i.d.RANGED_INPUT_END,{refinerName:e,end:a}):"",d=function(e){let t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:r.Asd.Asc,a=arguments.length>2?arguments[2]:void 0,n=arguments.length>3?arguments[3]:void 0,s=n.formatMessage({id:i.d.SORT_ORDER_PREFIX+t,defaultMessage:t}),o=a.find(t=>t.sortBy===e),d=n.formatMessage({id:o?.labelId,defaultMessage:o?.defaultLabel});return n.formatMessage(i.d.SORTED_BY_STRING,{sortBy:d,sortOrder:s})},l=(e,t)=>e?t.formatMessage(i.d.NOT_PREFIX,{refinerValue:e}):"",c=(e,t,a)=>t&&e?a.formatMessage(i.d.REFINER_MATCHING,{refiner:e,target:t}):""},15112:function(e,t,a){a.d(t,{n:function(){return r}});let r=(e,t)=>!t.filter(t=>!t.isDefaultRefinerValue(e)&&!t.isNonMainRefiner).length},22133:function(e,t,a){a.d(t,{Q5:function(){return o},_z:function(){return i},yx:function(){return s}});var r=a(1207),n=a(68668);let i=(e,t)=>Object.keys(t).find(a=>t[a].toLowerCase()===e.toLowerCase()||a.toLowerCase()===e.toLowerCase())??e,s=(e,t,a)=>{let r=Array.isArray(t)?t:[t],i=`${e}=${r.join(n.C6)}`;return a.endsWith("?")?i:`&${i}`},o=e=>{let t=e.split(n.C6).map(e=>Math.floor(Number(e))).slice(0,2);1===t.length&&t.push(t[0]);let[a,i]=t;if(a>0&&i>0&&a>i){let e=a;a=i,i=e}let s=String(a),o=String(i);return{start:a>0?(0,r.Lr)(s+"-01-01"):void 0,end:i>0?(0,r.Lr)(o+"-12-31"):void 0}}},38739:function(e,t,a){a.d(t,{G1:function(){return n},N1:function(){return f},lv:function(){return u},v1:function(){return m},vQ:function(){return p},yJ:function(){return g}});var r=a(78919);let n=e=>{let t=e?.genres?.map(e=>({id:e.id,text:e.text}));return{titleTypes:e?.titleTypes,genres:t,publicLists:e?.publicLists,companies:e?.companies}},i=e=>{let t={};return e?.forEach(e=>{t[e.filterId]=e.total}),t},s=(e,t)=>t?.map(t=>({id:t.genreId??t.filterId??t.id,text:t.text,total:e[t.genreId]??e[t.filterId]??e[t.id]??0})).filter(e=>!!e.text),o=e=>e.currentValues?.titleTypes||e.metadata?.titleMetadata?.titleTypes?.map(e=>({id:e.id,text:e.text})).filter(e=>!!e.text),d=e=>{let t=i(e.facetsData?.advancedTitleSearch?.genres);return s(t,e.currentValues?.genres||e.metadata?.titleMetadata?.titleGenres)?.filter(e=>"Adult"!==e.id)},l=e=>e.facetsData?.advancedTitleSearch?.keywords?.map(e=>({id:e.filterId,text:e.text,total:e.total})),c=e=>e.facetsData?.advancedTitleSearch?.jobCategories?.map(e=>({id:e.filterId,text:e.text,total:e.total})),u=e=>({titleTypes:o(e),genres:d(e),keywords:l(e),jobCategories:c(e)}),f=e=>e.replace(/\s\s+/g," ").replace(h,g).trim(),g=",",h=RegExp(`${g}{2,}`,"g"),m=e=>{let t=[],a=[];return e.forEach(e=>{let r=e.split(g),n=r.filter(e=>!e.startsWith("!")),i=r.filter(e=>e.startsWith("!")).map(e=>e.replace("!",""));t.push(...n),a.push(...i)}),{include:t,exclude:a}},p=e=>/^ls[0-9]{7,19}$/.test(e.toLocaleLowerCase())||e.toLocaleLowerCase() in r.fz},82584:function(e,t,a){a.d(t,{X:function(){return r}});let r=(e,t,a,r)=>{let n;let i=e.trim();if(!i.length)return;let s=i.split("-");if(s.length>2)return;let o=Number(s?.[0]);if(a&&o<a&&(o=a),r&&o>r&&(o=r),s[1]?(n=Number(s[1]))>12&&(n=12):n=t?12:1,!(isNaN(n)||isNaN(o)))return`${String(o)}-${String(n).padStart(2,"0")}`}},2529:function(e,t,a){a.d(t,{k:function(){return r}});let r=["actress","actor","archive_footage","self"]},59387:function(e,t,a){a.d(t,{E0:function(){return f},H1:function(){return s},sW:function(){return i},vt:function(){return u}});var r,n,i,s,o=a(54073),d=a.n(o),l=a(6935);async function c(e,t){let a=function(e){if(e){let t=e.toLowerCase();return t.length>40&&(t=t.substr(0,40)),encodeURIComponent(t=t.replace(/^\s*/,""))}return""}(e);if(""===a)return[];let r=`https://v3.sg.media-imdb.com/suggestion/${t}x/${a}.json`,n=await fetch(r,{method:"GET",headers:{}});return n?.json()}(r=i||(i={})).TITLE="title",r.NAME="name",(n=s||(s={})).NAMES="names/",n.TITLES="titles/",n.ALL="";let u=async(e,t)=>(function(e){let t=[];for(let{id:a,i:r,l:n,s:i,q:s,y:o}of e?.d??[])t.push({id:a,displayText:o?`${n} (${o})`:n,metaText:i,entityType:s?"title":"name",imageModel:(0,l.ff)({caption:n,height:r?.height,width:r?.width,url:r?.imageUrl})});return t})(await c(e,t)),f=d()(async(e,t,a)=>{a(await u(e,t))},200)},50155:function(e,t,a){a.d(t,{H:function(){return o},w:function(){return s}});var r=a(30382),n=a.n(r),i=a(79984);let s=n()`
+    fragment CreditMetaData on Credit {
+        attributes {
+            text
+        }
+        category {
+            id
+            text
+        }
+        ... on Cast {
+            characters {
+                name
+            }
+            episodeCredits(first: 0) {
+                total
+                yearRange {
+                    year
+                    endYear
+                }
+                displayableYears(first: 1) {
+                    total
+                    edges {
+                        node {
+                            year
+                            displayableProperty {
+                                value {
+                                    plainText
+                                }
+                            }
+                        }
+                    }
+                }
+                displayableSeasons(first: 1) {
+                    total
+                    edges {
+                        node {
+                            season
+                            displayableProperty {
+                                value {
+                                    plainText
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ... on Crew {
+            jobs {
+                id
+                text
+            }
+            episodeCredits(first: 0) {
+                total
+                yearRange {
+                    year
+                    endYear
+                }
+                displayableYears(first: 1) {
+                    total
+                    edges {
+                        node {
+                            year
+                            displayableProperty {
+                                value {
+                                    plainText
+                                }
+                            }
+                        }
+                    }
+                }
+                displayableSeasons(first: 1) {
+                    total
+                    edges {
+                        node {
+                            season
+                            displayableProperty {
+                                value {
+                                    plainText
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`,o=n()`
+    fragment CreditMetaDataPace on CreditV2 {
+        creditedRoles(first: 250) {
+            edges {
+                node {
+                    text
+                    category {
+                        categoryId
+                        text
+                        traits
+                    }
+                    attributes {
+                        text
+                    }
+                    # Characters doesn't support pagination, instead the graph will serve up to 2,500 items
+                    characters(first: 2500) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        episodeCredits(first: 0) {
+            total
+            yearRange {
+                year
+                endYear
+            }
+            ...creditDisplayableSeasonAndYear
+        }
+    }
+    ${i.N1}
+`},96908:function(e,t,a){a.d(t,{CZ:function(){return s},tl:function(){return i},yb:function(){return o}});var r=a(76635),n=a.n(r);let i={actor:"Actor",actress:"Actress",animation_department:"Animation Department",art_department:"Art Department",art_director:"Art Director",assistant_director:"Second Unit Director or Assistant Director",camera_department:"Camera and Electrical Department",casting_department:"Casting Department",casting_director:"Casting Director",choreographer:"Choreographer",cinematographer:"Cinematographer",composer:"Composer",costume_department:"Costume and Wardrobe Department",costume_designer:"Costume Designer",costume_supervisor:"Costume Supervisor",director:"Director",editor:"Editor",editorial_department:"Editorial Department",electrical_department:"Electrical Department",hair_stylist:"Hair Stylist",intimacy_coordinator:"Intimacy Coordinator",location_management:"Location Management",make_up_artist:"Make-Up Artist",make_up_department:"Make-Up Department",miscellaneous:"Additional Crew",music_department:"Music Department",music_supervisor:"Music Supervisor",producer:"Producer",production_department:"Production Department",production_designer:"Production Designer",production_manager:"Production Manager",property_master:"Property Master",script_department:"Script and Continuity Department",script_supervisor:"Script Supervisor",self:"Self",set_decorator:"Set Decorator",showrunner:"Showrunner",sound_department:"Sound Department",soundtrack:"Soundtrack",special_effects:"Special Effects",stunt_coordinator:"Stunt Coordinator",stunts:"Stunts",thanks:"Thanks",transportation_department:"Transportation Department",visual_effects:"Visual Effects",writer:"Writer",accountant:"Accountant",assistant:"Assistant",executive:"Executive",legal:"Legal",manager:"Manager",music_artist:"Music Artist",podcaster:"Podcaster",publicist:"Publicist",talent_agent:"Talent Agent"},s=n().invert(i),o={CAST:"amzn1.imdb.concept.name_credit_group.7caf7d16-5db9-4f4f-8864-d4c6e711c686",CREATOR:"amzn1.imdb.concept.name_credit_group.85198717-6c2d-481e-93a5-47858774bcce",DIRECTOR:"amzn1.imdb.concept.name_credit_category.ace5cb4c-8708-4238-9542-04641e7c8171",STAR:"amzn1.imdb.concept.name_credit_group.7510356e-fde9-438e-b3ad-0099ba6bc8ce",WRITER:"amzn1.imdb.concept.name_credit_category.c84ecaff-add5-4f2e-81db-102a41881fe3"}},10539:function(e,t,a){a.d(t,{x:function(){return r}});async function r(e,t){let a=0,r=[];for(;a<t;)try{return await e()}catch(e){r.push(e),a++}return Promise.reject(r)}},22669:function(e,t,a){a.d(t,{q:function(){return i},g:function(){return s}});var r=a(98977);let n=(e,t)=>(e??[]).map(e=>(0,r.r8)(e.toString())).map(e=>({rawValue:e,excluded:t??!1})),i=function(e,t){let a=arguments.length>2&&void 0!==arguments[2]?arguments[2]:e=>e.toString(),r=arguments.length>3&&void 0!==arguments[3]?arguments[3]:"include",i=arguments.length>4&&void 0!==arguments[4]?arguments[4]:"exclude",s=t??{},o=(s[r]??[]).filter(Boolean).map(a).filter(Boolean),d=(s[i]??[]).filter(Boolean).map(a).filter(Boolean);return o.length+d.length===0?[]:[{key:e,values:[...n(o??[]),...n(d??[],!0)]}]},s=(e,t)=>{let a=(t??[]).filter(Boolean).map(e=>e.toString());return 0===a.length?[]:[{key:e,values:n(a)}]}},9767:function(e,t,a){a.d(t,{l:function(){return n}});var r=a(14481);let n=e=>RegExp(`^${r.p$}$`).test(e)}}]);
