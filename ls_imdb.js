@@ -129,101 +129,101 @@
     
     // Function to fetch and parse The Pirate Bay search results
     function getPirateBayMagnets(imdbId) {
-        const url = `https://thepiratebay.org/search.php?q=${imdbId}`;
-        console.log(`Fetching magnet links for ${imdbId} from ${url}`);
+        // Use the API directly instead of scraping the HTML
+        const apiUrl = `https://apibay.org/q.php?q=${imdbId}&cat=0`;
+        console.log(`Fetching magnet links for ${imdbId} from API: ${apiUrl}`);
         
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: url,
+                url: apiUrl,
                 onload: function(response) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(response.responseText, "text/html");
-                    
-                    // Find all torrent entries
-                    const torrentEntries = doc.querySelectorAll('li.list-entry');
-                    console.log(`Found ${torrentEntries.length} torrent entries for ${imdbId}`);
-                    
-                    if (torrentEntries.length === 0) {
-                        console.log(`No torrents found for ${imdbId}`);
+                    try {
+                        const data = JSON.parse(response.responseText);
+                        console.log(`API returned ${data.length} results for ${imdbId}`);
+                        
+                        if (!Array.isArray(data) || data.length === 0) {
+                            console.log(`No torrents found for ${imdbId}`);
+                            resolve({
+                                best1080p: null,
+                                best720p: null
+                            });
+                            return;
+                        }
+                        
+                        // Parse the API results
+                        const torrents = [];
+                        
+                        for (const item of data) {
+                            try {
+                                // Skip if this is an error response
+                                if (item.name === "No results returned") {
+                                    continue;
+                                }
+                                
+                                const title = item.name;
+                                const seeds = parseInt(item.seeders, 10);
+                                const leechers = parseInt(item.leechers, 10);
+                                
+                                // Calculate seed:leech ratio (avoid division by zero)
+                                const ratio = leechers > 0 ? seeds / leechers : seeds;
+                                
+                                // Create magnet link from info hash
+                                const magnetLink = `magnet:?xt=urn:btih:${item.info_hash}&dn=${encodeURIComponent(title)}`;
+                                
+                                // Determine resolution
+                                const is1080p = title.includes('1080p') || title.includes('1080P');
+                                const is720p = title.includes('720p') || title.includes('720P');
+                                
+                                // Skip CAM/TS versions completely
+                                const titleLower = title.toLowerCase();
+                                const isCam = titleLower.includes('cam') || titleLower.includes('ts') || 
+                                             titleLower.includes('telesync') || titleLower.includes('tc') || 
+                                             titleLower.includes('telecine') || titleLower.includes('hdcam') ||
+                                             titleLower.includes('hdts') || titleLower.includes('hd-ts') ||
+                                             titleLower.includes('hd-cam') || titleLower.includes('hq-cam');
+                                
+                                // Skip this torrent if it's a CAM/TS version
+                                if (isCam) {
+                                    continue;
+                                }
+                                
+                                torrents.push({
+                                    title,
+                                    magnetLink,
+                                    seeds,
+                                    leechers,
+                                    ratio,
+                                    is1080p,
+                                    is720p,
+                                    isCam: false // All torrents added here are non-CAM
+                                });
+                            } catch (error) {
+                                console.error('Error parsing API result:', error);
+                            }
+                        }
+                        
+                        console.log(`Successfully parsed ${torrents.length} torrents from API`);
+                        
+                        // Find best torrents (all are already non-CAM/TS since we filtered them out)
+                        const best1080p = findBestTorrent(torrents.filter(t => t.is1080p));
+                        const best720p = findBestTorrent(torrents.filter(t => t.is720p));
+                        
+                        resolve({
+                            best1080p,
+                            best720p
+                        });
+                        
+                    } catch (error) {
+                        console.error('Error parsing API response:', error);
                         resolve({
                             best1080p: null,
                             best720p: null
                         });
-                        return;
                     }
-                    
-                    // Parse the torrents and store information
-                    const torrents = [];
-                    
-                    for (const entry of torrentEntries) {
-                        try {
-                            // Extract title
-                            const titleElement = entry.querySelector('.item-title a');
-                            if (!titleElement) continue;
-                            const title = titleElement.textContent.trim();
-                            
-                            // Extract magnet link
-                            const magnetElement = entry.querySelector('.item-icons a');
-                            if (!magnetElement) continue;
-                            const magnetLink = magnetElement.getAttribute('href');
-                            
-                            // Extract seeds and leechers
-                            const seedsElement = entry.querySelector('.item-seed');
-                            const leechElement = entry.querySelector('.item-leech');
-                            
-                            if (!seedsElement || !leechElement) continue;
-                            
-                            const seeds = parseInt(seedsElement.textContent.trim(), 10);
-                            const leechers = parseInt(leechElement.textContent.trim(), 10);
-                            
-                            // Calculate seed:leech ratio (avoid division by zero)
-                            const ratio = leechers > 0 ? seeds / leechers : seeds;
-                            
-                            // Determine resolution
-                            const is1080p = title.includes('1080p') || title.includes('1080P');
-                            const is720p = title.includes('720p') || title.includes('720P');
-                            
-                            // Skip CAM/TS versions unless that's all that's available
-                            const isCam = entry.querySelector('.item-type a:last-child').textContent.includes('CAM/TS');
-                            
-                            torrents.push({
-                                title,
-                                magnetLink,
-                                seeds,
-                                leechers,
-                                ratio,
-                                is1080p,
-                                is720p,
-                                isCam
-                            });
-                        } catch (error) {
-                            console.error('Error parsing torrent entry:', error);
-                        }
-                    }
-                    
-                    console.log(`Successfully parsed ${torrents.length} torrents`);
-                    
-                    // First try to find non-CAM versions
-                    let best1080p = findBestTorrent(torrents.filter(t => t.is1080p && !t.isCam));
-                    let best720p = findBestTorrent(torrents.filter(t => t.is720p && !t.isCam));
-                    
-                    // If no non-CAM versions found, include CAM versions
-                    if (!best1080p) {
-                        best1080p = findBestTorrent(torrents.filter(t => t.is1080p));
-                    }
-                    
-                    if (!best720p) {
-                        best720p = findBestTorrent(torrents.filter(t => t.is720p));
-                    }
-                    
-                    resolve({
-                        best1080p,
-                        best720p
-                    });
                 },
                 onerror: function(error) {
-                    console.error('Error fetching The Pirate Bay search results:', error);
+                    console.error('Error fetching The Pirate Bay API results:', error);
                     resolve({
                         best1080p: null,
                         best720p: null
