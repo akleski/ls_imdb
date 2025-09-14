@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- saved from url=(0489)https://widget.justwatch.com/inline_widget?iframe_key=0&language=en&api_key=rrE3uT7QpRZXrB2Y5pkAAgaBaJlsYrOu&object_type=movie&title=Friendship&year=2024&director=Andrew%20DeYoung&season_number=&no_offers_message=There%20is%20no%20offer%20for%20Friendship%20at%20this%20time%20in%20your%20location.&title_not_found_message=There%20is%20no%20offer%20for%20Friendship%20at%20this%20time%20in%20your%20location.&max_offers=10&webpage=https%3A%2F%2Fwww.rottentomatoes.com%2Fm%2Ffriendship_2024 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JW Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            overflow: hidden;
+        }
+        body {
+            height: 2em;
+            font-family: sans-serif;
+        }
+        #message {
+            padding: 5px;
+        }
+    </style>
+    
+    <style>
+         
+        body {
+            color: #000;
+            background-color: #fff;
+            border-radius: 1.1em;
+        }
+    </style>
+    
+    
+    
+</head>
+<body>
+    <div id="message">There is no offer for Friendship at this time in your location.</div>
+
+    <script>
+        const shouldScroll = false;
+        (shouldScroll ? window.setTimeout : window.setInterval)(checkWidgetHeight, 150)
+
+const html = document.documentElement;
+const body = document.body;
+
+let key;
+const queryKeyValues = window.location.search.slice(1).split("&");
+for (let i = queryKeyValues.length; i > 0; --i) {
+  if (!queryKeyValues[i - 1].startsWith("iframe_key")) {
+    continue;
+  }
+
+  key = queryKeyValues[i - 1].split("=")[1];
+  break;
+}
+
+let lastHeight = 0;
+
+function checkWidgetHeight() {
+  const height = Math.max(body.scrollHeight, body.offsetHeight);
+  if (height === lastHeight) {
+    return;
+  }
+
+  window.parent.postMessage(
+    {
+      sender: "jw_widget",
+      type: "resize",
+      key: key,
+      cssHeight: height + "px",
+    },
+    "*"
+  );
+  lastHeight = height;
+}
+
+    </script>
+
+
+
+</body></html>
