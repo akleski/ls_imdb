@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         IMDb Movie Score and Search Enhancer
+// @name         IMDb Movie/TV Score and Search Enhancer
 // @namespace    http://tampermonkey.net/
 // @version      2.0
-// @description  Adds Rotten Tomatoes Tomatometer and Audience scores with icons, magnet links for best quality torrents, and custom search links to IMDb movie lists.
+// @description  Adds Rotten Tomatoes Tomatometer and Audience scores with icons, magnet links for best quality torrents, and custom search links to IMDb movie and TV series lists.
 // @author       Gemini
-// @match        https://www.imdb.com/search/title/?title_type=feature&*
+// @match        https://www.imdb.com/search/title/?title_type=*
+// @match        https://www.imdb.com/search/title/*title_type=tv_series*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -67,6 +68,16 @@
     
     // Register the update check menu command
     GM_registerMenuCommand('Check for updates', checkForUpdates);
+
+    // Content type detection
+    function getContentType() {
+        const url = window.location.href;
+        if (url.includes('title_type=tv_series')) {
+            return 'tv';
+        }
+        // Default to movie for other types or when not specified
+        return 'movie';
+    }
 
     // Add CSS for the scores in the metadata section
     GM_addStyle(`
@@ -253,7 +264,7 @@
     // Metacritic score is now provided natively by IMDb
 
     // Helper function to process Rotten Tomatoes detail page results
-    function getRottenTomatoesDetailPage(title, releaseYear, movieResults, parser) {
+    function getRottenTomatoesDetailPage(title, releaseYear, movieResults, parser, contentType = 'movie') {
         // Default result object with placeholders
         const result = {
             tomatoScore: 'N/A',
@@ -477,11 +488,11 @@
     }
     
     // Helper function to get Rotten Tomatoes scores and images
-    function getRottenTomatoesScore(title, releaseYear) {
+    function getRottenTomatoesScore(title, releaseYear, contentType = 'movie') {
         // Include release year in search if available to narrow down results
         const searchTerm = releaseYear ? `${title} ${releaseYear}` : title;
         const url = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(searchTerm)}`;
-        console.log(`Fetching Rotten Tomatoes score for "${searchTerm}" from ${url}`);
+        console.log(`Fetching Rotten Tomatoes score for "${searchTerm}" (${contentType}) from ${url}`);
         
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -505,7 +516,7 @@
                             console.log(`Found ${rowResults.length} row results using li.row selector`);
                             
                             // Use these results instead
-                            return getRottenTomatoesDetailPage(title, releaseYear, rowResults, parser);
+                            return getRottenTomatoesDetailPage(title, releaseYear, rowResults, parser, contentType);
                         }
                     }
                     
@@ -529,10 +540,16 @@
                     let bestMatch = null;
                     
                     for (const movie of movieResults) {
-                        // Check if it's a movie (not TV show)
+                        // Check media type based on what we're looking for
                         const mediaType = movie.querySelector('[slot="media-type"]');
-                        if (mediaType && !mediaType.textContent.trim().toLowerCase().includes('movie')) {
-                            continue;
+                        if (mediaType) {
+                            const mediaTypeText = mediaType.textContent.trim().toLowerCase();
+                            // Filter based on content type
+                            if (contentType === 'movie' && !mediaTypeText.includes('movie')) {
+                                continue;
+                            } else if (contentType === 'tv' && !mediaTypeText.includes('tv')) {
+                                continue;
+                            }
                         }
                         
                         // Get movie title
@@ -564,34 +581,38 @@
                         bestMatch = movieResults[0]; // Use the first result as fallback
                     }
                     
-                    // Get the direct URL to the movie page
-                    // Try multiple selector patterns to find the movie URL
-                    let linkElement = bestMatch.querySelector('a[href^="/m/"]');
+        // Get the direct URL to the movie/TV page
+        // Try multiple selector patterns to find the content URL
+        const urlPattern = contentType === 'tv' ? 'a[href^="/tv/"]' : 'a[href^="/m/"]';
+        let linkElement = bestMatch.querySelector(urlPattern);
+        
+        // If not found directly, check parent/ancestor elements
+        if (!linkElement && bestMatch.closest) {
+            const rowElement = bestMatch.closest('.row') || bestMatch.closest('li.row');
+            if (rowElement) {
+                linkElement = rowElement.querySelector(urlPattern);
+            }
+        }
+        
+        // Also try to find the link by looking at slot="title" elements
+        if (!linkElement) {
+            const titleSlot = bestMatch.querySelector('[slot="title"]');
+            if (titleSlot && titleSlot.tagName === 'A') {
+                const href = titleSlot.getAttribute('href');
+                if (href) {
+                    const expectedPrefix = contentType === 'tv' ? '/tv/' : '/m/';
+                    const expectedUrlPattern = contentType === 'tv' ? 'rottentomatoes.com/tv/' : 'rottentomatoes.com/m/';
                     
-                    // If not found directly, check parent/ancestor elements
-                    if (!linkElement && bestMatch.closest) {
-                        const rowElement = bestMatch.closest('.row') || bestMatch.closest('li.row');
-                        if (rowElement) {
-                            linkElement = rowElement.querySelector('a[href^="/m/"]');
-                        }
+                    if (href.startsWith(expectedPrefix)) {
+                        linkElement = titleSlot;
+                    } else if (href.includes(expectedUrlPattern)) {
+                        // It's a full URL, not just a path
+                        result.movieUrl = href;
+                        console.log(`Found full ${contentType} URL in title slot: ${result.movieUrl}`);
+                        linkElement = null; // Don't need linkElement anymore since we have the full URL
                     }
-                    
-                    // Also try to find the link by looking at slot="title" elements
-                    if (!linkElement) {
-                        const titleSlot = bestMatch.querySelector('[slot="title"]');
-                        if (titleSlot && titleSlot.tagName === 'A') {
-                            const href = titleSlot.getAttribute('href');
-                            if (href) {
-                                if (href.startsWith('/m/')) {
-                                    linkElement = titleSlot;
-                                } else if (href.includes('rottentomatoes.com/m/')) {
-                                    // It's a full URL, not just a path
-                                    result.movieUrl = href;
-                                    console.log(`Found full movie URL in title slot: ${result.movieUrl}`);
-                                    linkElement = null; // Don't need linkElement anymore since we have the full URL
-                                }
-                            }
-                        }
+                }
+            }
                     }
 
                     // If we have a direct movie URL, get scores from the detail page
@@ -751,17 +772,21 @@
     }
 
     async function addScoresAndSearchLinks() {
+        // Detect content type
+        const contentType = getContentType();
+        console.log(`Processing ${contentType} content`);
+        
         // New IMDB uses React and has different class structure
         const movieElements = document.querySelectorAll('.ipc-metadata-list-summary-item');
         
         if (movieElements.length === 0) {
-            console.log('No movie elements found on the page. Retrying in 2 seconds...');
+            console.log(`No ${contentType} elements found on the page. Retrying in 2 seconds...`);
             // The page might be loading dynamically with React, so wait and retry
             setTimeout(addScoresAndSearchLinks, 2000);
             return;
         }
 
-        console.log(`Found ${movieElements.length} movie elements on the page.`);
+        console.log(`Found ${movieElements.length} ${contentType} elements on the page.`);
 
         for (const movieElement of movieElements) {
             // Avoid adding scores multiple times to the same element
@@ -802,14 +827,14 @@
                 }
             }
 
-            console.log(`Processing movie: ${title} (${imdbId}) [${releaseYear}]`);
+            console.log(`Processing ${contentType}: ${title} (${imdbId}) [${releaseYear}]`);
             
             // Container for external links (to be placed after metadata)
             const linksContainer = document.createElement('div');
             linksContainer.className = 'ratings-container';
 
             // Fetch Rotten Tomatoes scores and images
-            const rtScores = await getRottenTomatoesScore(title, releaseYear);
+            const rtScores = await getRottenTomatoesScore(title, releaseYear, contentType);
             
             // Find the metadata section (dli-title-metadata) where we'll add our inline scores
             const metadataDiv = movieElement.querySelector('.dli-title-metadata');
